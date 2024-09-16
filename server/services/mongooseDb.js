@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const config = require('../config');
 
 const dbUrl = config.dbUrlMongoDB;
-console.log(dbUrl);
+// console.log(dbUrl);
 
 const connectDB = async () => {
   try {
