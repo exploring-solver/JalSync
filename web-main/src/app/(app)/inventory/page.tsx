@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React, { useState } from 'react';
@@ -6,7 +7,7 @@ import { TextField, Button, Box, Typography } from '@mui/material';
 const InventoryManagement = () => {
     const [item, setItem] = useState({ name: '', quantity: '', demandForecast: '' });
 
-    const handleInputChange = (e) => {
+    const handleInputChange = (e:any) => {
         setItem({ ...item, [e.target.name]: e.target.value });
     };
 

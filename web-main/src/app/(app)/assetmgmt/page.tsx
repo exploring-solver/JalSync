@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 "use client";
 import React, { useState } from 'react';
@@ -6,7 +7,7 @@ import { TextField, Button, Box, Typography } from '@mui/material';
 const AssetsManagement = () => {
     const [asset, setAsset] = useState({ name: '', location: '', installationDate: '' });
 
-    const handleInputChange = (e) => {
+    const handleInputChange = (e:any) => {
         setAsset({ ...asset, [e.target.name]: e.target.value });
     };
 
