@@ -23,7 +23,7 @@ const AboutUs = () => {
 
         <section className="mb-12">
           <h2 className="text-2xl font-semibold mb-4 text-black text-left dark:text-white">
-            The Problem We're Solving
+            The Problem We&apos;re Solving
           </h2>
           <p className="text-gray-700">
             The Jal Jeevan Mission faces challenges in the efficient operation and maintenance of drinking water supply schemes at the village level. Gram Panchayats and PHED personnel need a comprehensive tool to manage assets, inventories, and finances related to water supply infrastructure. JalSync addresses this need by providing a mobile-based application that streamlines these processes, ensuring the sustainability and effectiveness of rural water supply systems.
@@ -95,7 +95,7 @@ const AboutUs = () => {
         <section>
           <h2 className="text-2xl font-semibold mb-4">Get Involved</h2>
           <ul className="list-disc list-inside mt-4 text-gray-700">
-            <li>Check out our project on <a href="https://github.com/YourOrganization/jalsync" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">GitHub</a></li>
+            <li>Check out our project on <a href="https://github.com/exploring-solver/JalSync" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">GitHub</a></li>
             <li>Contact your local Gram Panchayat to learn more about implementing JalSync in your village</li>
           </ul>
         </section>
