@@ -18,7 +18,9 @@ const app = express();
 
 app.use(cors());
 app.use(bodyParser.json());
-
+app.get('/',(req,res) => {
+  res.json("Welcome to JalSync API by team ramanujan (sih-2024)!!")
+})
 app.use('/api/users', userRoutes);
 app.use('/api/assets', assetRoutes);
 app.use('/api/consumables', consumableRoutes);

@@ -8,13 +8,14 @@ import * as SplashScreen from 'expo-splash-screen';
 import { View, Text } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-import AssetsScreen from '../screens/AssetsScreen';
+// import AssetsScreen from '../screens/AssetsScreen';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
-import InventoryScreen from '../screens/InventoryScreen';
-import FinanceScreen from '../screens/FinanceScreen';
+// import InventoryScreen from '../screens/InventoryScreen';
+// import FinanceScreen from '../screens/FinanceScreen';
 import ProfileScreen from '../screens/ProfileScreen';
-
+import DashboardScreen from '../screens/DashboardScreen';
+import {PanchayatsScreen,AssetsScreen, BillingsScreen, ConsumablesScreen} from '../screens/EntityScreen';
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
@@ -31,12 +32,16 @@ function MainTabNavigator() {
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
-          if (route.name === 'Assets') {
+          if (route.name === 'Dashboard') {
+            iconName = focused ? 'home' : 'home-outline';
+          }else if (route.name === 'Assets') {
             iconName = focused ? 'water' : 'water-outline';
           } else if (route.name === 'Inventory') {
             iconName = focused ? 'list' : 'list-outline';
           } else if (route.name === 'Finance') {
             iconName = focused ? 'cash' : 'cash-outline';
+          } else if (route.name === 'Panchayats') {
+            iconName = focused ? 'people' : 'people-outline';
           } else if (route.name === 'Profile') {
             iconName = focused ? 'person' : 'person-outline';
           }
@@ -45,20 +50,32 @@ function MainTabNavigator() {
         },
       })}
     >
+      <Tab.Screen name="Dahboard" component={DashboardScreen} />
       <Tab.Screen name="Assets" component={AssetsScreen} />
-      <Tab.Screen name="Inventory" component={InventoryScreen} />
-      <Tab.Screen name="Finance" component={FinanceScreen} />
+      <Tab.Screen name="Inventory" component={ConsumablesScreen} />
+      <Tab.Screen name="Finance" component={BillingsScreen} />
+      <Tab.Screen name="Panchayants" component={PanchayatsScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
   );
 }
 
 function AppNavigator() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   return (
     <Stack.Navigator initialRouteName="Login">
-      <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="Register" component={RegisterScreen} />
-      <Stack.Screen name="Dashboard" component={MainTabNavigator} options={{ headerShown: false }} />
+      {!isAuthenticated ? (
+        <>
+          <Stack.Screen name="Login" options={{ headerShown: false }}>
+            {props => <LoginScreen {...props} setIsAuthenticated={setIsAuthenticated} />}
+          </Stack.Screen>
+          <Stack.Screen name="Register" component={RegisterScreen} />
+        </>
+      ) : (
+        <>
+          <Stack.Screen name="Dashboard" component={MainTabNavigator} options={{ headerShown: false }} />
+        </>
+      )}
     </Stack.Navigator>
   );
 }
@@ -81,7 +98,7 @@ export default function App() {
 
   return (
     <PaperProvider>
-      <NavigationContainer independent= {true}>
+      <NavigationContainer independent={true}>
         <AppNavigator />
       </NavigationContainer>
     </PaperProvider>

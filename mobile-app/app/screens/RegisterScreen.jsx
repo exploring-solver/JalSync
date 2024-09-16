@@ -1,99 +1,85 @@
 import React, { useState } from 'react';
-import { TextInput, Button, Avatar } from 'react-native-paper';
-import { View, Text, SafeAreaView, KeyboardAvoidingView, Image, StyleSheet, Platform } from 'react-native';
-function RegisterScreen({ navigation }) {
+import { View, StyleSheet } from 'react-native';
+import { TextInput, Button, Title, Snackbar } from 'react-native-paper';
+import { register } from '../../services/api';
+
+const RegisterScreen = ({ navigation }) => {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
+  const [snackbarVisible, setSnackbarVisible] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
 
-  const handleRegister = () => {
-    // In a real app, you would handle registration here
-    alert('Registration functionality not implemented in this demo');
-    navigation.goBack();
+  const handleRegister = async () => {
+    try {
+      await register({ name, email, password, role: 'user' });
+      setSnackbarMessage('Registration successful. Please login.');
+      setSnackbarVisible(true);
+      setTimeout(() => navigation.navigate('Login'), 3000);
+    } catch (error) {
+      setSnackbarMessage('Registration failed. Please try again.');
+      setSnackbarVisible(true);
+    }
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.keyboardAvoidingView}
+    <View style={styles.container}>
+      <Title style={styles.title}>Register</Title>
+      <TextInput
+        label="Name"
+        value={name}
+        onChangeText={setName}
+        mode="outlined"
+        style={styles.input}
+      />
+      <TextInput
+        label="Email"
+        value={email}
+        onChangeText={setEmail}
+        mode="outlined"
+        style={styles.input}
+      />
+      <TextInput
+        label="Password"
+        value={password}
+        onChangeText={setPassword}
+        mode="outlined"
+        secureTextEntry
+        style={styles.input}
+      />
+      <Button mode="contained" onPress={handleRegister} style={styles.button}>
+        Register
+      </Button>
+      <Button mode="text" onPress={() => navigation.navigate('Login')}>
+        Back to Login
+      </Button>
+      <Snackbar
+        visible={snackbarVisible}
+        onDismiss={() => setSnackbarVisible(false)}
+        duration={3000}
       >
-        <View style={styles.logoContainer}>
-          <Image
-            source={require('@/assets/images/logo-jalsync.png')}
-            style={styles.logo}
-            resizeMode="contain"
-          />
-        </View>
-        <View style={styles.formContainer}>
-        <TextInput
-          label="Email"
-          value={email}
-          onChangeText={setEmail}
-          mode="outlined"
-          style={styles.input}
-        />
-        <TextInput
-          label="Password"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry={!showPassword}
-          mode="outlined"
-          right={<TextInput.Icon icon={showPassword ? "eye-off" : "eye"} onPress={() => setShowPassword(!showPassword)} />}
-          style={styles.input}
-        />
-        <Button mode="contained" onPress={handleRegister}>
-          Register
-        </Button>
-        <Button onPress={() => navigation.goBack()}>
-          Already have an account? Login
-        </Button>
-        </View>
-      </KeyboardAvoidingView>
-    </SafeAreaView >
+        {snackbarMessage}
+      </Snackbar>
+    </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
-      flex: 1,
-      backgroundColor: '#f5f5f5',
+    flex: 1,
+    justifyContent: 'center',
+    padding: 20,
   },
-  keyboardAvoidingView: {
-      flex: 1,
-      justifyContent: 'center',
-  },
-  logoContainer: {
-      alignItems: 'center',
-  },
-  logo: {
-      width: 150,
-      height: 150,
-  },
-  formContainer: {
-      paddingHorizontal: 20,
+  title: {
+    textAlign: 'center',
+    marginBottom: 30,
   },
   input: {
-      marginBottom: 15,
+    marginBottom: 10,
   },
-  roleButtonContainer: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      marginBottom: 15,
-  },
-  roleButton: {
-      flex: 1,
-      marginHorizontal: 5,
-  },
-  activeRoleButton: {
-      backgroundColor: '#007AFF',
-  },
-  loginButton: {
-      marginBottom: 15,
-      paddingVertical: 8,
-  },
-  registerButton: {
-      marginTop: 10,
+  button: {
+    marginTop: 10,
+    marginBottom: 10,
   },
 });
 

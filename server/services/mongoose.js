@@ -3,7 +3,7 @@ const config = require('../config');
 
 const dbUrl = config.dbUrlMongoDB ;
 
-mongoose.connect(dbUrl, {})
+mongoose.connect(dbUrl)
   .then(() => {
     console.log('MongoDB connected');
   })
