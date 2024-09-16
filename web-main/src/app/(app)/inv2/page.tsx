@@ -16,10 +16,15 @@ interface InventoryItem {
     optimalStockLevel: number;
 }
 
+interface ForecastData {
+    month: string;
+    demand: number;
+}
+
 const InventoryManagement: React.FC = () => {
     const [inventory, setInventory] = useState<InventoryItem[]>([]);
     const [selectedItem, setSelectedItem] = useState<InventoryItem | null>(null);
-    const [forecastData, setForecastData] = useState([]);
+    const [forecastData, setForecastData] = useState<ForecastData[]>([]);
 
     const handleAddItem = (newItem: InventoryItem) => {
         setInventory([...inventory, newItem]);
@@ -31,7 +36,7 @@ const InventoryManagement: React.FC = () => {
 
     const generateForecast = () => {
         // This is a placeholder for the actual forecasting logic
-        const mockForecast = [
+        const mockForecast: ForecastData[] = [
             { month: 'Jan', demand: 100 },
             { month: 'Feb', demand: 120 },
             { month: 'Mar', demand: 140 },
@@ -79,7 +84,7 @@ const InventoryManagement: React.FC = () => {
                     <Typography variant="h5" gutterBottom>Item Details</Typography>
                     <Box component="form" onSubmit={(e) => {
                         e.preventDefault();
-                        selectedItem ? handleUpdateItem(selectedItem) : handleAddItem(selectedItem as InventoryItem);
+                        selectedItem ? handleUpdateItem(selectedItem) : handleAddItem(selectedItem as unknown as InventoryItem);
                     }} sx={{ '& .MuiTextField-root': { my: 1 } }}>
                         <TextField
                             fullWidth

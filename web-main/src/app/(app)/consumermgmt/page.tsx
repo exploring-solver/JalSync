@@ -35,7 +35,7 @@ const ConsumerManagementBilling: React.FC = () => {
             consumption: Math.floor(Math.random() * 100),
             billAmount: Math.floor(Math.random() * 1000),
             dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-            paymentStatus: 'Unpaid' as 'Unpaid',
+            paymentStatus: 'Unpaid' as const,
         };
         handleUpdateConsumer(updatedConsumer);
     };
@@ -86,7 +86,7 @@ const ConsumerManagementBilling: React.FC = () => {
                         <Typography variant="h5" sx={{ mb: 2 }}>Consumer Details</Typography>
                         <form onSubmit={(e) => {
                             e.preventDefault();
-                            selectedConsumer ? handleUpdateConsumer(selectedConsumer) : handleAddConsumer(selectedConsumer as Consumer);
+                            selectedConsumer ? handleUpdateConsumer(selectedConsumer) : handleAddConsumer(selectedConsumer as unknown as Consumer);
                         }}>
                             <TextField
                                 label="Consumer ID"
@@ -114,7 +114,7 @@ const ConsumerManagementBilling: React.FC = () => {
                                 value={selectedConsumer?.connectionType || ''}
                                 onChange={(e) => setSelectedConsumer({ ...selectedConsumer, connectionType: e.target.value } as Consumer)}
                                 fullWidth
-                                margin="normal"
+                                margin="dense"
                             >
                                 <MenuItem value="Residential">Residential</MenuItem>
                                 <MenuItem value="Commercial">Commercial</MenuItem>

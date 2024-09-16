@@ -61,7 +61,7 @@ const Navbar: React.FC = () => {
         </div>
         <Button
           onClick={toggleSidebar}
-          variant="ghost"
+          variant="default"
           size="icon"
           className="md:hidden"
           aria-label="Toggle menu"
@@ -76,7 +76,7 @@ const Navbar: React.FC = () => {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-end p-4">
-              <Button onClick={closeSidebar} variant="ghost" size="icon">
+              <Button onClick={closeSidebar} variant="default" size="icon">
                 <X className="h-6 w-6" />
               </Button>
             </div>

@@ -1,9 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import React, { useState } from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
 import { Button, TextField, Select, MenuItem, Box, Typography } from '@mui/material';
-
+import React, { useEffect, useRef,useState  } from 'react';
+import { OlaMaps } from '@/olaSDK/olamaps-js-sdk.es';
 interface Asset {
     id: string;
     type: string;
@@ -17,8 +16,39 @@ interface Asset {
 }
 
 const GISAssetManagement: React.FC = () => {
+    const mapContainerRef = useRef<HTMLDivElement | null>(null);
+    const olaMapsRef = useRef<OlaMaps | null>(null);
+    const myMapRef = useRef<any>(null);
     const [assets, setAssets] = useState<Asset[]>([]);
     const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null);
+
+    useEffect(() => {
+        if (!olaMapsRef.current && mapContainerRef.current ) {
+            olaMapsRef.current = new OlaMaps({
+                apiKey: process.env.NEXT_PUBLIC_OLA_API_KEY,
+            });
+
+            myMapRef.current = olaMapsRef.current.init({
+                style: "https://api.olamaps.io/tiles/vector/v1/styles/default-light-standard/style.json",
+                container: mapContainerRef.current,
+                center: [77.2881183,28.690229   ],
+                zoom: 16,
+            });
+
+            if (myMapRef.current) {
+                assets.forEach((asset) => {
+                    const popup = olaMapsRef.current!.addPopup({ offset: [0, -30], anchor: 'bottom' })
+                        .setHTML(`<div class="font-semibold text-xl">${asset}</div>`);
+
+                    olaMapsRef.current!
+                        .addMarker({ offset: [0, 6], anchor: 'bottom', color: 'red' })
+                        .setLngLat([asset.longitude, asset.latitude])
+                        .addTo(myMapRef.current)
+                        .setPopup(popup);
+                });
+            }
+        }   
+    });
 
     const handleAddAsset = (newAsset: Asset) => {
         setAssets([...assets, newAsset]);
@@ -35,7 +65,7 @@ const GISAssetManagement: React.FC = () => {
 
                 <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 4 }}>
                     <Box sx={{ height: 400 }}>
-                        <MapContainer center={[20.5937, 78.9629]} zoom={5} style={{ height: '100%', width: '100%' }}>
+                        {/* <MapContainer center={[20.5937, 78.9629]} zoom={5} style={{ height: '100%', width: '100%' }}>
                             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                             {assets.map(asset => (
                                 <Marker
@@ -48,14 +78,17 @@ const GISAssetManagement: React.FC = () => {
                                     <Popup>{asset.type}</Popup>
                                 </Marker>
                             ))}
-                        </MapContainer>
+                        </MapContainer> */}
+                        <div className="bg-white shadow-xl rounded-lg overflow-hidden">
+                            <div ref={mapContainerRef} className="w-full h-[600px]" />
+                        </div>
                     </Box>
 
                     <Box>
                         <Typography variant="h5" sx={{ mb: 2 }}>Asset Details</Typography>
                         <form onSubmit={(e) => {
                             e.preventDefault();
-                            selectedAsset ? handleUpdateAsset(selectedAsset) : handleAddAsset(selectedAsset as Asset);
+                            selectedAsset ? handleUpdateAsset(selectedAsset) : handleAddAsset(selectedAsset as unknown as Asset);
                         }}>
                             <TextField
                                 label="Asset ID"
@@ -69,7 +102,7 @@ const GISAssetManagement: React.FC = () => {
                                 value={selectedAsset?.type || ''}
                                 onChange={(e) => setSelectedAsset({ ...selectedAsset, type: e.target.value } as Asset)}
                                 fullWidth
-                                margin="normal"
+                                margin="dense"
                             >
                                 <MenuItem value="Pump">Pump</MenuItem>
                                 <MenuItem value="Pipeline">Pipeline</MenuItem>
@@ -127,7 +160,7 @@ const GISAssetManagement: React.FC = () => {
                                 value={selectedAsset?.condition || ''}
                                 onChange={(e) => setSelectedAsset({ ...selectedAsset, condition: e.target.value } as Asset)}
                                 fullWidth
-                                margin="normal"
+                                margin="dense"
                             >
                                 <MenuItem value="Excellent">Excellent</MenuItem>
                                 <MenuItem value="Good">Good</MenuItem>
