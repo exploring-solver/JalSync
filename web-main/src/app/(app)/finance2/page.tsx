@@ -1,11 +1,8 @@
 "use client";
 import React, { useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Select } from '@/components/ui/select';
-import { Table } from '@/components/ui/table';
-import { Box } from '@mui/material';
+import { Button, TextField, Select, MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Box, Typography } from '@mui/material';
+
 interface Transaction {
     id: string;
     type: 'income' | 'expense';
@@ -48,100 +45,133 @@ const FinancialManagement: React.FC = () => {
     };
 
     return (
-        <Box p={4} className="min-h-screen py-12 mt-10 flex justify-center items-center">
-            <Box maxWidth="md" width="100%">
-                <h1 className="text-2xl font-bold mb-4">Financial Management for Gram Panchayat</h1>
+        <Box sx={{ p: 4, minHeight: '100vh', py: 12, mt: 10, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <Box sx={{ maxWidth: 'md', width: '100%' }}>
+                <Typography variant="h4" sx={{ mb: 4 }}>Financial Management for Gram Panchayat</Typography>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <h2 className="text-xl font-semibold mb-2">Transaction List</h2>
-                        <Table
-                            data={transactions}
-                            columns={[
-                                { header: 'ID', accessor: 'id' },
-                                { header: 'Type', accessor: 'type' },
-                                { header: 'Amount', accessor: 'amount' },
-                                { header: 'Date', accessor: 'date' },
-                            ]}
-                            onRowClick={setSelectedTransaction}
-                        />
-                    </div>
+                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 4 }}>
+                    <Box>
+                        <Typography variant="h5" sx={{ mb: 2 }}>Transaction List</Typography>
+                        <TableContainer component={Paper}>
+                            <Table>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell>ID</TableCell>
+                                        <TableCell>Type</TableCell>
+                                        <TableCell>Amount</TableCell>
+                                        <TableCell>Date</TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {transactions.map((transaction) => (
+                                        <TableRow key={transaction.id} onClick={() => setSelectedTransaction(transaction)}>
+                                            <TableCell>{transaction.id}</TableCell>
+                                            <TableCell>{transaction.type}</TableCell>
+                                            <TableCell>{transaction.amount}</TableCell>
+                                            <TableCell>{transaction.date}</TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </Box>
 
-                    <div>
-                        <h2 className="text-xl font-semibold mb-2">Transaction Details</h2>
+                    <Box>
+                        <Typography variant="h5" sx={{ mb: 2 }}>Transaction Details</Typography>
                         <form onSubmit={(e) => {
                             e.preventDefault();
                             selectedTransaction ? handleUpdateTransaction(selectedTransaction) : handleAddTransaction(selectedTransaction as Transaction);
                         }}>
-                            <Input
+                            <TextField
                                 label="Transaction ID"
                                 value={selectedTransaction?.id || ''}
                                 onChange={(e) => setSelectedTransaction({ ...selectedTransaction, id: e.target.value } as Transaction)}
+                                fullWidth
+                                margin="normal"
                             />
                             <Select
                                 label="Type"
-                                options={['income', 'expense']}
                                 value={selectedTransaction?.type || ''}
-                                onChange={(value) => setSelectedTransaction({ ...selectedTransaction, type: value as 'income' | 'expense' } as Transaction)}
-                            />
-                            <Input
+                                onChange={(e) => setSelectedTransaction({ ...selectedTransaction, type: e.target.value as 'income' | 'expense' } as Transaction)}
+                                fullWidth
+                                margin="normal"
+                            >
+                                <MenuItem value="income">Income</MenuItem>
+                                <MenuItem value="expense">Expense</MenuItem>
+                            </Select>
+                            <TextField
                                 label="Amount"
                                 type="number"
                                 value={selectedTransaction?.amount || ''}
                                 onChange={(e) => setSelectedTransaction({ ...selectedTransaction, amount: parseFloat(e.target.value) } as Transaction)}
+                                fullWidth
+                                margin="normal"
                             />
-                            <Input
+                            <TextField
                                 label="Date"
                                 type="date"
                                 value={selectedTransaction?.date || ''}
                                 onChange={(e) => setSelectedTransaction({ ...selectedTransaction, date: e.target.value } as Transaction)}
+                                fullWidth
+                                margin="normal"
+                                InputLabelProps={{ shrink: true }}
                             />
-                            <Input
+                            <TextField
                                 label="Source/Purpose"
                                 value={selectedTransaction?.source || selectedTransaction?.purpose || ''}
                                 onChange={(e) => setSelectedTransaction({
                                     ...selectedTransaction,
                                     [selectedTransaction?.type === 'income' ? 'source' : 'purpose']: e.target.value
                                 } as Transaction)}
+                                fullWidth
+                                margin="normal"
                             />
-                            <Button type="submit">{selectedTransaction ? 'Update Transaction' : 'Add Transaction'}</Button>
+                            <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
+                                {selectedTransaction ? 'Update Transaction' : 'Add Transaction'}
+                            </Button>
                         </form>
-                    </div>
-                </div>
+                    </Box>
+                </Box>
 
-                <div className="mt-8">
-                    <h2 className="text-xl font-semibold mb-2">Financial Summary</h2>
-                    <div className="grid grid-cols-3 gap-4">
-                        <div className="bg-green-100 p-4 rounded">
-                            <h3 className="font-semibold">Total Income</h3>
-                            <p className="text-2xl">₹{financialSummary.income.toFixed(2)}</p>
-                        </div>
-                        <div className="bg-red-100 p-4 rounded">
-                            <h3 className="font-semibold">Total Expense</h3>
-                            <p className="text-2xl">₹{financialSummary.expense.toFixed(2)}</p>
-                        </div>
-                        <div className="bg-blue-100 p-4 rounded">
-                            <h3 className="font-semibold">Balance</h3>
-                            <p className="text-2xl">₹{financialSummary.balance.toFixed(2)}</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="mt-8">
-                    <h2 className="text-xl font-semibold mb-2">Financial Overview</h2>
-                    <BarChart width={600} height={300} data={[
-                        { name: 'Income', amount: financialSummary.income },
-                        { name: 'Expense', amount: financialSummary.expense },
-                        { name: 'Balance', amount: financialSummary.balance },
-                    ]}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="name" />
-                        <YAxis />
-                        <Tooltip />
-                        <Legend />
-                        <Bar dataKey="amount" fill="#8884d8" />
-                    </BarChart>
-                </div>
+                <Box sx={{ mt: 8 }}>
+                    <Typography variant="h5" sx={{ mb: 2 }}>Financial Summary</Typography>
+                    <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 4 }}>
+                        <Paper sx={{ p: 2, bgcolor: 'success.light' }}>
+                            <Typography variant="h6">Total Income</Typography>
+                            <Typography variant="h4">₹{financialSummary.income.toFixed(2)}</Typography>
+                        </Paper>
+                        <Paper sx={{ p: 2, bgcolor: 'error.light' }}>
+                            <Typography variant="h6">Total Expense</Typography>
+                            <Typography variant="h4">₹{financialSummary.expense.toFixed(2)}</Typography>
+                        </Paper>
+                        <Paper sx={{ p: 2, bgcolor: 'info.light' }}>
+                            <Typography variant="h6">Balance</Typography>
+                            <Typography variant="h4">₹{financialSummary.balance.toFixed(2)}</Typography>
+                        </Paper>
+                    </Box>
+                </Box>
+                <Box sx={{ mt: 8 }}>
+                    <Typography variant="h5" sx={{ mb: 2 }}>Financial Overview</Typography>
+                    <Box sx={{ width: '100%', height: 300 }}>
+                        <BarChart
+                            width={600}
+                            height={300}
+                            data={[
+                                { name: 'Income', amount: financialSummary.income },
+                                { name: 'Expense', amount: financialSummary.expense },
+                                { name: 'Balance', amount: financialSummary.balance },
+                            ]}
+                            margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                        >
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="name" />
+                            <YAxis />
+                            <Tooltip />
+                            <Legend />
+                            <Bar dataKey="amount" fill="#8884d8" />
+                        </BarChart>
+                    </Box>
+                </Box>
             </Box>
         </Box>
     );

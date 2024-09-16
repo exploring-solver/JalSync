@@ -1,10 +1,6 @@
 "use client";
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Select } from '@/components/ui/select';
-import { Table } from '@/components/ui/table';
-import { Box } from '@mui/material';
 import React, { useState } from 'react';
+import { Button, TextField, Select, MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Box, Typography } from '@mui/material';
 import { PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
 
 interface Consumer {
@@ -53,79 +49,111 @@ const ConsumerManagementBilling: React.FC = () => {
     const COLORS = ['#0088FE', '#00C49F', '#FFBB28'];
 
     return (
-        <Box p={4} className="min-h-screen py-12 mt-10 flex justify-center items-center">
-            <Box maxWidth="md" width="100%">
-                <h1 className="text-2xl font-bold mb-4">Consumer Management and Billing</h1>
+        <Box sx={{ p: 4, minHeight: '100vh', py: 12, mt: 10, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <Box sx={{ maxWidth: 'md', width: '100%' }}>
+                <Typography variant="h4" sx={{ mb: 4 }}>Consumer Management and Billing</Typography>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <h2 className="text-xl font-semibold mb-2">Consumer List</h2>
-                        <Table
-                            data={consumers}
-                            columns={[
-                                { header: 'ID', accessor: 'id' },
-                                { header: 'Name', accessor: 'name' },
-                                { header: 'Connection Type', accessor: 'connectionType' },
-                                { header: 'Bill Amount', accessor: 'billAmount' },
-                                { header: 'Payment Status', accessor: 'paymentStatus' },
-                            ]}
-                            onRowClick={setSelectedConsumer}
-                        />
-                    </div>
+                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 4 }}>
+                    <Box>
+                        <Typography variant="h5" sx={{ mb: 2 }}>Consumer List</Typography>
+                        <TableContainer component={Paper}>
+                            <Table>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell>ID</TableCell>
+                                        <TableCell>Name</TableCell>
+                                        <TableCell>Connection Type</TableCell>
+                                        <TableCell>Bill Amount</TableCell>
+                                        <TableCell>Payment Status</TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {consumers.map((consumer) => (
+                                        <TableRow key={consumer.id} onClick={() => setSelectedConsumer(consumer)}>
+                                            <TableCell>{consumer.id}</TableCell>
+                                            <TableCell>{consumer.name}</TableCell>
+                                            <TableCell>{consumer.connectionType}</TableCell>
+                                            <TableCell>{consumer.billAmount}</TableCell>
+                                            <TableCell>{consumer.paymentStatus}</TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </Box>
 
-                    <div>
-                        <h2 className="text-xl font-semibold mb-2">Consumer Details</h2>
+                    <Box>
+                        <Typography variant="h5" sx={{ mb: 2 }}>Consumer Details</Typography>
                         <form onSubmit={(e) => {
                             e.preventDefault();
                             selectedConsumer ? handleUpdateConsumer(selectedConsumer) : handleAddConsumer(selectedConsumer as Consumer);
                         }}>
-                            <Input
+                            <TextField
                                 label="Consumer ID"
                                 value={selectedConsumer?.id || ''}
                                 onChange={(e) => setSelectedConsumer({ ...selectedConsumer, id: e.target.value } as Consumer)}
+                                fullWidth
+                                margin="normal"
                             />
-                            <Input
+                            <TextField
                                 label="Name"
                                 value={selectedConsumer?.name || ''}
                                 onChange={(e) => setSelectedConsumer({ ...selectedConsumer, name: e.target.value } as Consumer)}
+                                fullWidth
+                                margin="normal"
                             />
-                            <Input
+                            <TextField
                                 label="Contact Info"
                                 value={selectedConsumer?.contactInfo || ''}
                                 onChange={(e) => setSelectedConsumer({ ...selectedConsumer, contactInfo: e.target.value } as Consumer)}
+                                fullWidth
+                                margin="normal"
                             />
                             <Select
                                 label="Connection Type"
-                                options={['Residential', 'Commercial']}
                                 value={selectedConsumer?.connectionType || ''}
-                                onChange={(value) => setSelectedConsumer({ ...selectedConsumer, connectionType: value } as Consumer)}
-                            />
-                            <Input
+                                onChange={(e) => setSelectedConsumer({ ...selectedConsumer, connectionType: e.target.value } as Consumer)}
+                                fullWidth
+                                margin="normal"
+                            >
+                                <MenuItem value="Residential">Residential</MenuItem>
+                                <MenuItem value="Commercial">Commercial</MenuItem>
+                            </Select>
+                            <TextField
                                 label="Meter Reading"
                                 type="number"
                                 value={selectedConsumer?.meterReading || ''}
                                 onChange={(e) => setSelectedConsumer({ ...selectedConsumer, meterReading: parseInt(e.target.value) } as Consumer)}
+                                fullWidth
+                                margin="normal"
                             />
-                            <Button type="submit">{selectedConsumer ? 'Update Consumer' : 'Add Consumer'}</Button>
+                            <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
+                                {selectedConsumer ? 'Update Consumer' : 'Add Consumer'}
+                            </Button>
                         </form>
                         {selectedConsumer && (
-                            <Button onClick={() => generateBill(selectedConsumer)} className="mt-4">Generate Bill</Button>
+                            <Button onClick={() => generateBill(selectedConsumer)} variant="contained" color="secondary" sx={{ mt: 2 }}>
+                                Generate Bill
+                            </Button>
                         )}
-                    </div>
-                </div>
+                    </Box>
+                </Box>
 
-                <div className="mt-8">
-                    <h2 className="text-xl font-semibold mb-2">Billing Settings</h2>
+                <Box sx={{ mt: 8 }}>
+                    <Typography variant="h5" sx={{ mb: 2 }}>Billing Settings</Typography>
                     <Select
-                        label="Billing Cycle"
-                        options={['Monthly', 'Quarterly', 'Annually']}
                         value={billingCycle}
-                        onChange={setBillingCycle}
-                    />
-                </div>
+                        onChange={(e) => setBillingCycle(e.target.value)}
+                        fullWidth
+                    >
+                        <MenuItem value="Monthly">Monthly</MenuItem>
+                        <MenuItem value="Quarterly">Quarterly</MenuItem>
+                        <MenuItem value="Annually">Annually</MenuItem>
+                    </Select>
+                </Box>
 
-                <div className="mt-8">
-                    <h2 className="text-xl font-semibold mb-2">Payment Status Overview</h2>
+                <Box sx={{ mt: 8 }}>
+                    <Typography variant="h5" sx={{ mb: 2 }}>Payment Status Overview</Typography>
                     <PieChart width={400} height={400}>
                         <Pie
                             data={paymentStatusData}
@@ -143,7 +171,7 @@ const ConsumerManagementBilling: React.FC = () => {
                         <Tooltip />
                         <Legend />
                     </PieChart>
-                </div>
+                </Box>
             </Box>
         </Box>
     );

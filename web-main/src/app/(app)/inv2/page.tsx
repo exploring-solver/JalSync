@@ -1,11 +1,7 @@
 "use client";
 import React, { useState } from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Select } from '@/components/ui/select';
-import { Table } from '@/components/ui/table';
-import { Box } from '@mui/material';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { Button, TextField, Select, MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Box, Container, Typography, Grid } from '@mui/material';
 
 interface InventoryItem {
     id: string;
@@ -47,98 +43,129 @@ const InventoryManagement: React.FC = () => {
     };
 
     return (
-        <Box p={4} className="min-h-screen py-12 mt-10 flex justify-center items-center">
-            <Box maxWidth="md" width="100%">
-                <h1 className="text-2xl font-bold mb-4">Inventory Management and Demand Forecasting</h1>
+        <Container maxWidth="lg" sx={{ py: 12, mt: 10 }}>
+            <Typography variant="h4" component="h1" gutterBottom>
+                Inventory Management and Demand Forecasting
+            </Typography>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <h2 className="text-xl font-semibold mb-2">Inventory List</h2>
-                        <Table
-                            data={inventory}
-                            columns={[
-                                { header: 'ID', accessor: 'id' },
-                                { header: 'Name', accessor: 'name' },
-                                { header: 'Category', accessor: 'category' },
-                                { header: 'Quantity', accessor: 'quantity' },
-                            ]}
-                            onRowClick={setSelectedItem}
+            <Grid container spacing={4}>
+                <Grid item xs={12} md={6}>
+                    <Typography variant="h5" gutterBottom>Inventory List</Typography>
+                    <TableContainer component={Paper}>
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>ID</TableCell>
+                                    <TableCell>Name</TableCell>
+                                    <TableCell>Category</TableCell>
+                                    <TableCell>Quantity</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {inventory.map((item) => (
+                                    <TableRow key={item.id} onClick={() => setSelectedItem(item)} hover>
+                                        <TableCell>{item.id}</TableCell>
+                                        <TableCell>{item.name}</TableCell>
+                                        <TableCell>{item.category}</TableCell>
+                                        <TableCell>{item.quantity}</TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </Grid>
+
+                <Grid item xs={12} md={6}>
+                    <Typography variant="h5" gutterBottom>Item Details</Typography>
+                    <Box component="form" onSubmit={(e) => {
+                        e.preventDefault();
+                        selectedItem ? handleUpdateItem(selectedItem) : handleAddItem(selectedItem as InventoryItem);
+                    }} sx={{ '& .MuiTextField-root': { my: 1 } }}>
+                        <TextField
+                            fullWidth
+                            label="Item ID"
+                            value={selectedItem?.id || ''}
+                            onChange={(e) => setSelectedItem({ ...selectedItem, id: e.target.value } as InventoryItem)}
                         />
-                    </div>
+                        <TextField
+                            fullWidth
+                            label="Name"
+                            value={selectedItem?.name || ''}
+                            onChange={(e) => setSelectedItem({ ...selectedItem, name: e.target.value } as InventoryItem)}
+                        />
+                        <Select
+                            fullWidth
+                            label="Category"
+                            value={selectedItem?.category || ''}
+                            onChange={(e) => setSelectedItem({ ...selectedItem, category: e.target.value } as InventoryItem)}
+                        >
+                            {['Chemical', 'Filter', 'Spare Part', 'Other'].map((category) => (
+                                <MenuItem key={category} value={category}>{category}</MenuItem>
+                            ))}
+                        </Select>
+                        <TextField
+                            fullWidth
+                            label="Quantity"
+                            type="number"
+                            value={selectedItem?.quantity || ''}
+                            onChange={(e) => setSelectedItem({ ...selectedItem, quantity: parseInt(e.target.value) } as InventoryItem)}
+                        />
+                        <TextField
+                            fullWidth
+                            label="Supplier"
+                            value={selectedItem?.supplier || ''}
+                            onChange={(e) => setSelectedItem({ ...selectedItem, supplier: e.target.value } as InventoryItem)}
+                        />
+                        <TextField
+                            fullWidth
+                            label="Purchase Date"
+                            type="date"
+                            InputLabelProps={{ shrink: true }}
+                            value={selectedItem?.purchaseDate || ''}
+                            onChange={(e) => setSelectedItem({ ...selectedItem, purchaseDate: e.target.value } as InventoryItem)}
+                        />
+                        <TextField
+                            fullWidth
+                            label="Expiration Date"
+                            type="date"
+                            InputLabelProps={{ shrink: true }}
+                            value={selectedItem?.expirationDate || ''}
+                            onChange={(e) => setSelectedItem({ ...selectedItem, expirationDate: e.target.value } as InventoryItem)}
+                        />
+                        <TextField
+                            fullWidth
+                            label="Usage Rate"
+                            type="number"
+                            value={selectedItem?.usageRate || ''}
+                            onChange={(e) => setSelectedItem({ ...selectedItem, usageRate: parseFloat(e.target.value) } as InventoryItem)}
+                        />
+                        <TextField
+                            fullWidth
+                            label="Reorder Point"
+                            type="number"
+                            value={selectedItem?.reorderPoint || ''}
+                            onChange={(e) => setSelectedItem({ ...selectedItem, reorderPoint: parseInt(e.target.value) } as InventoryItem)}
+                        />
+                        <TextField
+                            fullWidth
+                            label="Optimal Stock Level"
+                            type="number"
+                            value={selectedItem?.optimalStockLevel || ''}
+                            onChange={(e) => setSelectedItem({ ...selectedItem, optimalStockLevel: parseInt(e.target.value) } as InventoryItem)}
+                        />
+                        <Button type="submit" variant="contained" sx={{ mt: 2 }}>
+                            {selectedItem ? 'Update Item' : 'Add Item'}
+                        </Button>
+                    </Box>
+                </Grid>
+            </Grid>
 
-                    <div className=''>
-                        <h2 className="text-xl font-semibold mb-2">Item Details</h2>
-                        <form className='space-y-5' onSubmit={(e) => {
-                            e.preventDefault();
-                            selectedItem ? handleUpdateItem(selectedItem) : handleAddItem(selectedItem as InventoryItem);
-                        }}>
-                            <Input
-                                label="Item ID"
-                                value={selectedItem?.id || ''}
-                                onChange={(e) => setSelectedItem({ ...selectedItem, id: e.target.value } as InventoryItem)}
-                            />
-                            <Input
-                                label="Name"
-                                value={selectedItem?.name || ''}
-                                onChange={(e) => setSelectedItem({ ...selectedItem, name: e.target.value } as InventoryItem)}
-                            />
-                            <Select
-                                label="Category"
-                                options={['Chemical', 'Filter', 'Spare Part', 'Other']}
-                                value={selectedItem?.category || ''}
-                                onChange={(value) => setSelectedItem({ ...selectedItem, category: value } as InventoryItem)}
-                            />
-                            <Input
-                                label="Quantity"
-                                type="number"
-                                value={selectedItem?.quantity || ''}
-                                onChange={(e) => setSelectedItem({ ...selectedItem, quantity: parseInt(e.target.value) } as InventoryItem)}
-                            />
-                            <Input
-                                label="Supplier"
-                                value={selectedItem?.supplier || ''}
-                                onChange={(e) => setSelectedItem({ ...selectedItem, supplier: e.target.value } as InventoryItem)}
-                            />
-                            <Input
-                                label="Purchase Date"
-                                type="date"
-                                value={selectedItem?.purchaseDate || ''}
-                                onChange={(e) => setSelectedItem({ ...selectedItem, purchaseDate: e.target.value } as InventoryItem)}
-                            />
-                            <Input
-                                label="Expiration Date"
-                                type="date"
-                                value={selectedItem?.expirationDate || ''}
-                                onChange={(e) => setSelectedItem({ ...selectedItem, expirationDate: e.target.value } as InventoryItem)}
-                            />
-                            <Input
-                                label="Usage Rate"
-                                type="number"
-                                value={selectedItem?.usageRate || ''}
-                                onChange={(e) => setSelectedItem({ ...selectedItem, usageRate: parseFloat(e.target.value) } as InventoryItem)}
-                            />
-                            <Input
-                                label="Reorder Point"
-                                type="number"
-                                value={selectedItem?.reorderPoint || ''}
-                                onChange={(e) => setSelectedItem({ ...selectedItem, reorderPoint: parseInt(e.target.value) } as InventoryItem)}
-                            />
-                            <Input
-                                label="Optimal Stock Level"
-                                type="number"
-                                value={selectedItem?.optimalStockLevel || ''}
-                                onChange={(e) => setSelectedItem({ ...selectedItem, optimalStockLevel: parseInt(e.target.value) } as InventoryItem)}
-                            />
-                            <Button type="submit">{selectedItem ? 'Update Item' : 'Add Item'}</Button>
-                        </form>
-                    </div>
-                </div>
-
-                <div className="mt-8">
-                    <h2 className="text-xl font-semibold mb-2">Demand Forecast</h2>
-                    <Button onClick={generateForecast}>Generate Forecast</Button>
-                    <div className="mt-4">
-                        <LineChart width={600} height={300} data={forecastData}>
+            <Box sx={{ mt: 8 }}>
+                <Typography variant="h5" gutterBottom>Demand Forecast</Typography>
+                <Button onClick={generateForecast} variant="contained">Generate Forecast</Button>
+                <Box sx={{ mt: 4, height: 300 }}>
+                    <ResponsiveContainer width="100%" height="100%">
+                        <LineChart data={forecastData}>
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis dataKey="month" />
                             <YAxis />
@@ -146,10 +173,10 @@ const InventoryManagement: React.FC = () => {
                             <Legend />
                             <Line type="monotone" dataKey="demand" stroke="#8884d8" />
                         </LineChart>
-                    </div>
-                </div>
+                    </ResponsiveContainer>
+                </Box>
             </Box>
-        </Box>
+        </Container>
     );
 };
 

@@ -5,6 +5,16 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Menu, X } from 'lucide-react';
 
+// Define navigation items with their corresponding URLs
+const navItems = [
+  { name: 'Asset Management', href: '/assetmgmt' },
+  { name: 'Consumer Management', href: '/consumermgmt' },
+  { name: 'GIS', href: '/gis' },
+  { name: 'Finance', href: '/finance2' },
+  { name: 'Inventory', href: '/inv2' },
+  { name: 'About Us', href: '/about-us' },
+];
+
 const Navbar: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
@@ -26,26 +36,27 @@ const Navbar: React.FC = () => {
     setIsSidebarOpen(false);
   };
 
-  const getLinkHref = (item: string): string => {
-    return item === 'Home' ? '/' : `/${item.toLowerCase().replace(' ', '-')}`;
-  };
+  const NavLink: React.FC<{ item: { name: string; href: string }; onClick?: () => void }> = ({ item, onClick }) => (
+    <Link
+      href={item.href}
+      className="px-4 py-2 rounded-lg text-md font-medium hover:bg-blue-700 hover:text-white transition-colors duration-300"
+      onClick={onClick}
+    >
+      {item.name}
+    </Link>
+  );
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-white text-blue-800 shadow-md' : 'bg-transparent text-black'
-      }`}>
+    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      isScrolled ? 'bg-white text-blue-800 shadow-md' : 'bg-transparent text-black'
+    }`}>
       <div className="container mx-auto px-6 py-4 flex justify-between items-center">
         <Link href="/" className="font-bold text-xl transition-colors duration-300">
           JalSync
         </Link>
         <div className="hidden md:flex space-x-4">
-          {['Assetmgmt', 'Billing', 'Finance', 'Inventory', 'About-us'].map((item) => (
-            <Link
-              key={item}
-              href={getLinkHref(item)}
-              className="px-4 py-2 rounded-lg text-md font-medium hover:bg-blue-700 hover:text-white transition-colors duration-300"
-            >
-              {item}
-            </Link>
+          {navItems.map((item) => (
+            <NavLink key={item.name} item={item} />
           ))}
         </div>
         <Button
@@ -70,15 +81,8 @@ const Navbar: React.FC = () => {
               </Button>
             </div>
             <nav className="flex flex-col space-y-4 p-4">
-              {['Assetmgmt', 'Billing', 'Finance', 'Inventory', 'About-us'].map((item) => (
-                <Link
-                  key={item}
-                  href={getLinkHref(item)}
-                  className="text-blue-800 hover:bg-blue-100 px-4 py-2 rounded-md transition-colors duration-300"
-                  onClick={closeSidebar}
-                >
-                  {item}
-                </Link>
+              {navItems.map((item) => (
+                <NavLink key={item.name} item={item} onClick={closeSidebar} />
               ))}
             </nav>
           </div>
