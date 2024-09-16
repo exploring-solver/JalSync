@@ -1,56 +1,57 @@
 const teamMembers = [
+  {
+    name: "Khushi Minda",
+    role: "Team Leader, UI/UX Designer and Frontend Developer",
+    image: "https://avatars.githubusercontent.com/khushiminda",
+    social: {
+      linkedin: "https://www.linkedin.com/in/khushi-minda2004/",
+      github: "https://github.com/khushiminda"
+    }
+  },
     {
-      name: "Ashwin Bansal",
-      role: "Team Leader and Full Stack Developer",
-      image: "",
+      name: "Aman",
+      role: " Full Stack Developer",
+      image: "https://avatars.githubusercontent.com/exploring-solver",
       social: {
-        linkedin: "https://www.linkedin.com/in/ashwin-bansal-5b5a70257/",
-        github: "https://github.com/Ashwin1902",
+        linkedin: "https://www.linkedin.com/in/aman-sharma-a37072263/",
+        github: "https://github.com/exploring-solver",
       }
     },
     {
       name: "Ansh Jain",
       role: "Full Stack Developer",
-      image: "",
+      image: "https://avatars.githubusercontent.com/AnshJain9159",
       social: {
         linkedin: "https://www.linkedin.com/in/ansh-jain-78986b242/",
         github: "https://github.com/AnshJain9159",
       }
     },
     {
-      name: "Abhinav Gupta",
+      name: "Chanmeet Singh Sahni",
       role: "Full Stack Developer",
-      image: "",
+      image: "https://avatars.githubusercontent.com/singhchanmeet",
       social: {
-        linkedin: "https://www.linkedin.com/in/abhinav-gupta-b3317128a/",
-        github: "https://github.com/abhinav2805-ux"
+        linkedin: "https://www.linkedin.com/in/chanmeet-singh-sahni-504985257/",
+        github: "https://github.com/singhchanmeet"
       }
     },
     {
-      name: "Ujjwal Gupta",
+      name: "Ravi K Banchhiwal",
       role: "Machine Learning Engineer",
-      image: "",
+      image: "https://avatars.githubusercontent.com/ivar03",
       social: {
-        linkedin: "https://www.linkedin.com/in/ujjwal-gupta-67061b256/",
-        github: "https://github.com/Ujjwagupta1302",
+        linkedin: "https://www.linkedin.com/in/ravi-banchhiwal-505b3a282/",
+        github: "https://github.com/ivar03",
       }
     },
+    
     {
-      name: "Shruti Aggarwal",
-      role: "UI/UX Designer and Frontend Developer",
-      image: "",
-      social: {
-        linkedin: "https://www.linkedin.com/in/shruti-agarwal-b99054263/",
-        github: "https://github.com/SHRUTIAGARWAL21"
-      }
-    },
-    {
-      name: "Pranav Aggarwal",
+      name: "Chayan Khetan",
       role: "Machine Learning Engineer",
-      image: "",
+      image: "https://avatars.githubusercontent.com/Chayan-03",
       social: {
-        linkedin: "https://www.linkedin.com/in/pranav-aggarwal-3628ba293/",
-        github: "https://github.com/davidlee",
+        linkedin: "https://www.linkedin.com/in/chayan-khetan-1b9b71222/",
+        github: "https://github.com/Chayan-03",
       }
     }
   ];

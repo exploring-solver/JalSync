@@ -80,7 +80,7 @@ const FinancialManagement: React.FC = () => {
                         <Typography variant="h5" sx={{ mb: 2 }}>Transaction Details</Typography>
                         <form onSubmit={(e) => {
                             e.preventDefault();
-                            selectedTransaction ? handleUpdateTransaction(selectedTransaction) : handleAddTransaction(selectedTransaction as Transaction);
+                            selectedTransaction ? handleUpdateTransaction(selectedTransaction) : handleAddTransaction(selectedTransaction as unknown as Transaction);
                         }}>
                             <TextField
                                 label="Transaction ID"
@@ -94,7 +94,7 @@ const FinancialManagement: React.FC = () => {
                                 value={selectedTransaction?.type || ''}
                                 onChange={(e) => setSelectedTransaction({ ...selectedTransaction, type: e.target.value as 'income' | 'expense' } as Transaction)}
                                 fullWidth
-                                margin="normal"
+                                margin="dense"
                             >
                                 <MenuItem value="income">Income</MenuItem>
                                 <MenuItem value="expense">Expense</MenuItem>
