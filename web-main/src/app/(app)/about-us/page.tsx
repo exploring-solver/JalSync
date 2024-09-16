@@ -2,12 +2,13 @@ import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import Image from 'next/image';
 import teamMembers from '@/constants/team';
+import { Box } from '@mui/material';
 
 const AboutUs = () => {
   return (
-    <div className="bg-white py-12 bg-dot-black/[0.2]">
-      <div className="container mx-auto px-4">
-        
+    <Box p={4} className="min-h-screen py-12 flex justify-center items-center">
+      <Box maxWidth="md" width="100%">
+
         <h1 className="text-4xl font-bold mt-4 text-black text-center dark:text-white">
           JalSync
         </h1>
@@ -99,8 +100,8 @@ const AboutUs = () => {
             <li>Contact your local Gram Panchayat to learn more about implementing JalSync in your village</li>
           </ul>
         </section>
-      </div>
-    </div>
+      </Box >
+    </Box >
   );
 };
 
