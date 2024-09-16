@@ -12,7 +12,7 @@ const data = [
 
 const Dashboard = () => {
     return (
-        <Box p={4} className="min-h-screen">
+        <Box p={4} className="min-h-screen py-12 px-10">
             <Typography variant="h4" gutterBottom>
                 Dashboard - Water Supply Analytics
             </Typography>
