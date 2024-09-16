@@ -1,40 +1,16 @@
-/* eslint-disable @next/next/no-img-element */
-"use client";
-
-import React from 'react';
-import { Box, Button, Container, Typography } from '@mui/material';
-import Grid from '@mui/material/Grid';
-
-export default function Error404() {
+import { Button } from '@/components/ui/button'
+import Link from 'next/link'
+ 
+export default function NotFound() {
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        minHeight: '100vh'
-      }}
-    >
-      <Container maxWidth="md">
-        <Grid container spacing={2}>
-          <Grid xs={6}>
-            <Typography variant="h1">
-              404
-            </Typography>
-            <Typography variant="h6">
-              The page you&apos;re looking for doesn&apos;t exist.
-            </Typography>
-            <Button variant="contained">Back Home</Button>
-          </Grid>
-          <Grid xs={6}>
-            <img
-              src="https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569__340.jpg"
-              alt=""
-              width={500} height={250}
-            />
-          </Grid>
-        </Grid>
-      </Container>
-    </Box>
-  );
+    <div className='min-h-screen flex flex-col justify-center items-center align-middle space-y-8'>
+      <h2 className='text-4xl font-bold text-red-600'>Not Found</h2>
+      <p className='text-2xl font-semibold text-black'>Could not find requested resource</p>
+      <Link href="/">
+        <Button variant={'outline'}>
+            <span className='mr-2 text-2xl font-semibold'>Go Back</span>
+        </Button>
+      </Link>
+    </div>
+  )
 }

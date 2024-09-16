@@ -16,7 +16,7 @@ const FinanceManagement = () => {
     };
 
     return (
-        <Box p={4} className="min-h-screen">
+        <Box p={4} className="min-h-screen py-12">
             <Typography variant="h4" gutterBottom>
                 Manage Finance
             </Typography>
