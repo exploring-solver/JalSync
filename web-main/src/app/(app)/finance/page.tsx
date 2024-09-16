@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React, { useState } from 'react';
@@ -6,7 +7,7 @@ import { TextField, Button, Box, Typography } from '@mui/material';
 const FinanceManagement = () => {
     const [finance, setFinance] = useState({ description: '', amount: '', type: 'credit' });
 
-    const handleInputChange = (e) => {
+    const handleInputChange = (e:any) => {
         setFinance({ ...finance, [e.target.name]: e.target.value });
     };
 
