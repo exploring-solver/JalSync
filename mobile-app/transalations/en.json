@@ -1,0 +1,12 @@
+{
+    "common": {
+      "login": "Login",
+      "register": "Register",
+      "dashboard": "Dashboard",
+      "assets": "Assets",
+      "inventory": "Inventory",
+      "finance": "Finance",
+      "panchayats": "Panchayats",
+      "profile": "Profile"
+    }
+  }

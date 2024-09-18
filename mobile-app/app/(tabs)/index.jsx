@@ -16,7 +16,12 @@ import RegisterScreen from '../screens/RegisterScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import DashboardScreen from '../screens/DashboardScreen';
 import {PanchayatsScreen,AssetsScreen, BillingsScreen, ConsumablesScreen} from '../screens/EntityScreen';
+import MainStartScreen from '../screens/MainStartScreen';
+import SecondMainStartScreen from '../screens/SecondMainScreen';
 import { getToken } from '@/services/authStorage';
+// import './i18n';
+// import { useTranslation } from 'react-i18next';
+
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
@@ -27,6 +32,7 @@ const Tab = createBottomTabNavigator();
 
 
 function MainTabNavigator() {
+  const { t } = useTranslation();
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -51,7 +57,7 @@ function MainTabNavigator() {
         },
       })}
     >
-      <Tab.Screen name="Dashboard" component={DashboardScreen} />
+      <Tab.Screen name="Dashboard" component={MainStartScreen} />
       <Tab.Screen name="Assets" component={AssetsScreen} />
       <Tab.Screen name="Inventory" component={ConsumablesScreen} />
       <Tab.Screen name="Finance" component={BillingsScreen} />
@@ -62,7 +68,7 @@ function MainTabNavigator() {
 }
 
 function AppNavigator() {
-  const [isAuthenticated, setIsAuthenticated] = useState(getToken());
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   return (
     <Stack.Navigator initialRouteName="Login">
       {!isAuthenticated ? (

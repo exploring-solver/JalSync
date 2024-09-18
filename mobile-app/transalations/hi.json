@@ -1,0 +1,12 @@
+{
+    "common": {
+      "login": "लॉग इन करें",
+      "register": "पंजीकरण करें",
+      "dashboard": "डैशबोर्ड",
+      "assets": "संपत्तियाँ",
+      "inventory": "इन्वेंटरी",
+      "finance": "वित्त",
+      "panchayats": "पंचायतें",
+      "profile": "प्रोफ़ाइल"
+    }
+  }
