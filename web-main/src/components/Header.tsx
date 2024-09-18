@@ -4,28 +4,52 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Menu, X } from 'lucide-react';
+import axios from 'axios';
 
-// Define navigation items with their corresponding URLs
+// Define navigation items
 const navItems = [
   { name: 'Asset Management', href: '/assetmgmt' },
   { name: 'Consumer Management', href: '/consumermgmt' },
   { name: 'GIS', href: '/gis' },
   { name: 'Finance', href: '/finance2' },
+  { name: 'Billing', href: '/billing' },
   { name: 'Inventory', href: '/inv2' },
+  { name: 'Consumables', href: '/consumables' },
+  { name: 'Panchayats', href: '/panchayats' },
   { name: 'About Us', href: '/about-us' },
 ];
 
 const Navbar: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
+  const [user, setUser] = useState<string | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 0);
     };
-
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    // Retrieve user profile info from API if an access token exists
+    const fetchUserProfile = async () => {
+      const token = localStorage.getItem('accessToken');
+      if (token) {
+        try {
+          const response = await axios.get('http://localhost:5000/api/users/profile', {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          setUser(response.data.name); // Assuming `name` is the field in the user profile response
+        } catch (error) {
+          console.error('Error fetching user profile:', error);
+        }
+      }
+    };
+    fetchUserProfile();
   }, []);
 
   const toggleSidebar = (): void => {
@@ -34,6 +58,11 @@ const Navbar: React.FC = () => {
 
   const closeSidebar = (): void => {
     setIsSidebarOpen(false);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('accessToken');
+    setUser(null);
   };
 
   const NavLink: React.FC<{ item: { name: string; href: string }; onClick?: () => void }> = ({ item, onClick }) => (
@@ -47,9 +76,7 @@ const Navbar: React.FC = () => {
   );
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-      isScrolled ? 'bg-white text-blue-800 shadow-md' : 'bg-transparent text-black'
-    }`}>
+    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-white text-blue-800 shadow-md' : 'bg-transparent text-black'}`}>
       <div className="container mx-auto px-6 py-4 flex justify-between items-center">
         <Link href="/" className="font-bold text-xl transition-colors duration-300">
           JalSync
@@ -58,6 +85,25 @@ const Navbar: React.FC = () => {
           {navItems.map((item) => (
             <NavLink key={item.name} item={item} />
           ))}
+          {!user ? (
+            <>
+              <Link href="/login" className="px-4 py-2 rounded-lg bg-blue-700 text-white hover:bg-blue-900 transition-colors duration-300">
+                Login
+              </Link>
+              <Link href="/register" className="px-4 py-2 rounded-lg bg-blue-700 text-white hover:bg-blue-900 transition-colors duration-300">
+                Register
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link href="/profile" className="px-4 py-2 rounded-lg bg-green-700 text-white hover:bg-green-900 transition-colors duration-300">
+                {user}
+              </Link>
+              <Button onClick={handleLogout} className="px-4 py-2 rounded-lg bg-red-700 text-white hover:bg-red-900">
+                Logout
+              </Button>
+            </>
+          )}
         </div>
         <Button
           onClick={toggleSidebar}

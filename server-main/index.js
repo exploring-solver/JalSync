@@ -9,7 +9,8 @@ const panchayatRoutes = require('./routes/panchayatRoutes');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
-// const { admin, adminRouter } = require('./admin/admin');
+const Razorpay = require('razorpay');
+const crypto = require('crypto');
 
 dotenv.config();
 // connectDB();
@@ -26,6 +27,54 @@ app.use('/api/assets', assetRoutes);
 app.use('/api/consumables', consumableRoutes);
 app.use('/api/billings', billingRoutes);
 app.use('/api/panchayats', panchayatRoutes);
+
+
+// Initialize Razorpay instance
+const razorpay = new Razorpay({
+  key_id: process.env.RAZORPAY_KEY_ID,
+  key_secret: process.env.RAZORPAY_KEY_SECRET,
+});
+
+// Endpoint to create a new order
+app.post('/api/payments/', async (req, res) => {
+  const { amount } = req.body; // Amount should be in paise
+
+  try {
+    const options = {
+      amount, // amount in paise
+      currency: 'INR',
+      receipt: crypto.randomBytes(10).toString('hex'),
+    };
+
+    const order = await razorpay.orders.create(options);
+    res.json({
+      orderId: order.id,
+      currency: order.currency,
+      amount: order.amount,
+      razorpayKeyId: process.env.RAZORPAY_KEY_ID,
+    });
+  } catch (error) {
+    console.error('Error creating Razorpay order:', error);
+    res.status(500).send('Server error');
+  }
+});
+
+// Endpoint to verify payment signature
+app.post('/api/verify', (req, res) => {
+  const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+
+  const generatedSignature = crypto.createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
+    .update(`${razorpay_order_id}|${razorpay_payment_id}`)
+    .digest('hex');
+
+  if (generatedSignature === razorpay_signature) {
+    res.send('Payment verified');
+  } else {
+    res.status(400).send('Invalid signature');
+  }
+});
+
+
 
 const start = async () => {
   connectDB();
