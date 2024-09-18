@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { Button } from 'react-native-paper';
 import { getUserProfile } from '../../services/api';  // Import the function from api.js
+import { removeToken } from '@/services/authStorage';
 
 const ProfileScreen = () => {
   const [profile, setProfile] = useState(null);   // State to store profile data
@@ -58,8 +59,11 @@ const ProfileScreen = () => {
       )}
 
       {/* Button to edit the profile */}
-      <Button mode="contained" onPress={() => console.log('Edit Profile')}>
+      <Button style={styles.button} mode="contained" onPress={() => console.log('Edit Profile')}>
         Edit Profile
+      </Button>
+      <Button style={styles.button} mode="contained" onPress={() => removeToken()}>
+        Logout
       </Button>
     </View>
   );
@@ -86,6 +90,9 @@ const styles = StyleSheet.create({
   },
   error: {
     color: 'red',
+  },
+  button: {
+    marginTop: 20,
   },
 });
 
