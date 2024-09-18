@@ -6,7 +6,7 @@ import { Box } from '@mui/material';
 
 const AboutUs = () => {
   return (
-    <Box p={4} className="min-h-screen py-12 flex justify-center items-center">
+    <Box p={4} className="min-h-screen py-16 flex justify-center items-center">
       <Box maxWidth="md" width="100%">
 
         <h1 className="text-4xl font-bold mt-4 text-black text-center dark:text-white">

@@ -48,7 +48,7 @@ const InventoryManagement: React.FC = () => {
     };
 
     return (
-        <Container maxWidth="lg" sx={{ py: 12, mt: 10 }}>
+        <Container maxWidth="lg" sx={{ py: 16, mt: 10 }}>
             <Typography variant="h4" component="h1" gutterBottom>
                 Inventory Management and Demand Forecasting
             </Typography>

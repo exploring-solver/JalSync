@@ -17,7 +17,7 @@ const FinanceManagement = () => {
     };
 
     return (
-        <Box p={4} className="min-h-screen py-12 flex justify-center items-center">
+        <Box p={4} className="min-h-screen py-16 flex justify-center items-center">
             <Box maxWidth="md" width="100%">
                 <Typography variant="h4" gutterBottom>
                     Manage Finance

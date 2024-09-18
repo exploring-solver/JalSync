@@ -37,7 +37,7 @@ const LoginPage = () => {
   };
 
   return (
-    <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
+    <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh" className="py-16 min-h-screen my-8">
       <Box p={4} width="400px" boxShadow={3} borderRadius={2}>
         <Typography variant="h5" gutterBottom>
           Login

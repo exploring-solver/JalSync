@@ -59,7 +59,7 @@ const GISAssetManagement: React.FC = () => {
     };
 
     return (
-        <Box sx={{ p: 4, minHeight: '100vh', py: 12, mt: 10, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <Box sx={{ p: 4, minHeight: '100vh', py: 16, mt: 10, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <Box sx={{ maxWidth: 'md', width: '100%' }}>
                 <Typography variant="h4" sx={{ mb: 4 }}>GIS-based Asset Management</Typography>
 

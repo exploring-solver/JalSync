@@ -1,16 +1,33 @@
-"use client";
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
+"use client"
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Box, Button, TextField, Typography, Collapse, List, ListItem, ListItemText, IconButton, Dialog, DialogActions, DialogContent, DialogTitle, Alert, Divider } from '@mui/material';
 import { ExpandMore, ExpandLess, Delete } from '@mui/icons-material';
 
+interface Asset {
+  _id: string;
+  asset_type: string;
+  location_latitude: string;
+  location_longitude: string;
+  installation_date: string;
+  panchayat_id: string;
+}
+
+interface NewAsset {
+  asset_type: string;
+  location_latitude: string;
+  location_longitude: string;
+  installation_date: string;
+  panchayat_id: string;
+}
+
 const AssetManagementPage: React.FC = () => {
-  const [assets, setAssets] = useState<any[]>([]);
+  const [assets, setAssets] = useState<Asset[]>([]);
   const [collapsedAssetType, setCollapsedAssetType] = useState<string | null>(null);
   const [selectedAssetId, setSelectedAssetId] = useState<string | null>(null);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const [newAsset, setNewAsset] = useState({
+  const [newAsset, setNewAsset] = useState<NewAsset>({
     asset_type: '',
     location_latitude: '',
     location_longitude: '',
@@ -24,17 +41,15 @@ const AssetManagementPage: React.FC = () => {
   useEffect(() => {
     const fetchAssets = async () => {
       try {
-        // Fetch assets
-        const assetResponse = await axios.get('http://localhost:5000/api/assets/');
+        const assetResponse = await axios.get<Asset[]>('http://localhost:5000/api/assets/');
         const fetchedAssets = assetResponse.data;
         setAssets(fetchedAssets);
 
-        // Fetch panchayat names
-        const panchayatIds = [...new Set(fetchedAssets.map((asset: any) => asset.panchayat_id))];
+        const panchayatIds = Array.from(new Set(fetchedAssets.map(asset => asset.panchayat_id)));
         if (panchayatIds.length > 0) {
           const panchayatRequests = panchayatIds.map(id => axios.get(`http://localhost:5000/api/panchayats/${id}`));
           const panchayatResponses = await Promise.all(panchayatRequests);
-          const panchayatMap = panchayatResponses.reduce((acc: { [id: string]: string }, { data }: any) => {
+          const panchayatMap = panchayatResponses.reduce((acc: { [id: string]: string }, { data }) => {
             acc[data._id] = data.name;
             return acc;
           }, {});
@@ -66,7 +81,7 @@ const AssetManagementPage: React.FC = () => {
   const handleCreateAsset = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/assets/', newAsset);
+      const response = await axios.post<Asset>('http://localhost:5000/api/assets/', newAsset);
       setAssets([...assets, response.data]);
       setSuccess('Asset created successfully');
       setNewAsset({
@@ -86,17 +101,16 @@ const AssetManagementPage: React.FC = () => {
     setCollapsedAssetType(type === collapsedAssetType ? null : type);
   };
 
-  // Convert the object to an array of [key, value] pairs
   const assetCategories = Object.entries(
-    assets.reduce((acc: any, asset) => {
+    assets.reduce<{ [key: string]: Asset[] }>((acc, asset) => {
       acc[asset.asset_type] = acc[asset.asset_type] || [];
       acc[asset.asset_type].push(asset);
       return acc;
-    }, {} as { [key: string]: any[] })
+    }, {})
   );
 
   return (
-    <Box p={4} display="flex">
+    <Box p={4} display="flex" className="py-16 min-h-screen my-8">
       <Box flex={1} mr={2} borderRight="1px solid #ddd">
         <Typography variant="h4" gutterBottom>Asset Management</Typography>
 

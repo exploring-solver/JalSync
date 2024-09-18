@@ -301,7 +301,7 @@ const BillingManagementPage = () => {
 
 
   return (
-    <Box p={4} display="flex">
+    <Box p={4} display="flex" className="py-16 min-h-screen my-8">
       <Box flex={1} mr={2} borderRight="1px solid #ddd">
         <Typography variant="h4" gutterBottom>Billing Management</Typography>
 

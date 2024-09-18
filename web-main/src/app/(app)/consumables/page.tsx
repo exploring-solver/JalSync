@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Box, Button, TextField, Typography, List, ListItem, ListItemText, IconButton, Dialog, DialogActions, DialogContent, DialogTitle, Alert, Divider } from '@mui/material';
+import { Box, Button, TextField, Typography, List, ListItem, ListItemText, IconButton, Dialog, DialogActions, DialogContent, DialogTitle, Alert } from '@mui/material';
 import { Delete } from '@mui/icons-material';
 
 const ConsumableManagementPage: React.FC = () => {
@@ -82,7 +83,7 @@ const ConsumableManagementPage: React.FC = () => {
   };
 
   return (
-    <Box p={4} display="flex">
+    <Box p={4} display="flex" className="py-16 min-h-screen my-8">
       <Box flex={1} mr={2} borderRight="1px solid #ddd">
         <Typography variant="h4" gutterBottom>Consumable Management</Typography>
 

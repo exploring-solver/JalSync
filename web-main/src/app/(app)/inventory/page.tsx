@@ -17,7 +17,7 @@ const InventoryManagement = () => {
     };
 
     return (
-        <Box p={4} className="min-h-screen py-12">
+        <Box p={4} className="min-h-screen py-16">
             <Typography variant="h4" gutterBottom>
                 Manage Inventory
             </Typography>
