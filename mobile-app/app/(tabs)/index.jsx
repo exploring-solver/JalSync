@@ -16,6 +16,7 @@ import RegisterScreen from '../screens/RegisterScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import DashboardScreen from '../screens/DashboardScreen';
 import {PanchayatsScreen,AssetsScreen, BillingsScreen, ConsumablesScreen} from '../screens/EntityScreen';
+import { getToken } from '@/services/authStorage';
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
@@ -34,7 +35,7 @@ function MainTabNavigator() {
 
           if (route.name === 'Dashboard') {
             iconName = focused ? 'home' : 'home-outline';
-          }else if (route.name === 'Assets') {
+          } else if (route.name === 'Assets') {
             iconName = focused ? 'water' : 'water-outline';
           } else if (route.name === 'Inventory') {
             iconName = focused ? 'list' : 'list-outline';
@@ -50,18 +51,18 @@ function MainTabNavigator() {
         },
       })}
     >
-      <Tab.Screen name="Dahboard" component={DashboardScreen} />
+      <Tab.Screen name="Dashboard" component={DashboardScreen} />
       <Tab.Screen name="Assets" component={AssetsScreen} />
       <Tab.Screen name="Inventory" component={ConsumablesScreen} />
       <Tab.Screen name="Finance" component={BillingsScreen} />
-      <Tab.Screen name="Panchayants" component={PanchayatsScreen} />
+      <Tab.Screen name="Panchayats" component={PanchayatsScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
   );
 }
 
 function AppNavigator() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(getToken());
   return (
     <Stack.Navigator initialRouteName="Login">
       {!isAuthenticated ? (
@@ -73,7 +74,7 @@ function AppNavigator() {
         </>
       ) : (
         <>
-          <Stack.Screen name="Dashboard" component={MainTabNavigator} options={{ headerShown: false }} />
+          <Stack.Screen name="MainTab" component={MainTabNavigator} options={{ headerShown: false }} />
         </>
       )}
     </Stack.Navigator>

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import * as authStorage from './authStorage';
 
+// const BASE_URL = 'http://192.168.97.198:5000/api';
 const BASE_URL = 'http://192.168.1.2:5000/api';
 
 const api = axios.create({
