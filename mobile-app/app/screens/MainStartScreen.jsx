@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, Button, TextInput, FlatList, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, Button, TextInput, FlatList, ScrollView, StyleSheet, Alert } from 'react-native';
 import { PieChart } from 'react-native-chart-kit'; // For charting
 import { Dimensions } from 'react-native';
+import * as FileSystem from 'expo-file-system'; // File system access
+import * as Sharing from 'expo-sharing'; // Sharing functionality
 
 const MainStartScreen = () => {
   const [consumerData, setConsumerData] = useState([
@@ -23,6 +25,28 @@ const MainStartScreen = () => {
     { name: 'Operational', population: 60, color: '#00FF00', legendFontColor: '#7F7F7F', legendFontSize: 15 },
     { name: 'Needs Repair', population: 40, color: '#FF0000', legendFontColor: '#7F7F7F', legendFontSize: 15 },
   ];
+
+  // Function to handle report generation and sharing
+  const handleGenerateReport = async () => {
+    try {
+      // Path to the PDF file in the app's document directory
+      const pdfUri = FileSystem.documentDirectory + 'report.pdf';
+
+      // Check if the file exists
+      const fileExists = await FileSystem.getInfoAsync(pdfUri);
+      
+      if (fileExists.exists) {
+        // If the file exists, share it
+        await Sharing.shareAsync(pdfUri);
+      } else {
+        // Show an error alert if the file doesn't exist
+        Alert.alert('Error', 'Report file not found. Please make sure the PDF is available.');
+      }
+    } catch (error) {
+      console.error('Error sharing PDF:', error);
+      Alert.alert('Error', 'Failed to share the report. Please try again.');
+    }
+  };
 
   return (
     <ScrollView style={styles.container}>
@@ -99,7 +123,7 @@ const MainStartScreen = () => {
 
       {/* Reporting */}
       <Text style={styles.title}>Reports and Metrics</Text>
-      <Button title="Generate Report" onPress={() => {}} />
+      <Button title="Generate Report" onPress={handleGenerateReport} />
     </ScrollView>
   );
 };
@@ -109,6 +133,8 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     backgroundColor: '#f4f4f4',
+    paddingBottom: 16, // Ensure padding at the bottom for the button
+    marginBottom: 20, // Remove margin to avoid clipping
   },
   title: {
     fontSize: 18,
