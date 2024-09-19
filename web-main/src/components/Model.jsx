@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function Model({ image = 'logo.png', title, price }) {
+export default function Model({ image = 'logo.png', title }) {
   return (
     <div className=" mx-auto bg-transparent rounded-lg shadow overflow-hidden">
       <div className="relative aspect-square h-[200px]">

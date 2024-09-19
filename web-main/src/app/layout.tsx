@@ -1,20 +1,11 @@
+/* eslint-disable @next/next/no-sync-scripts */
 import type { Metadata } from "next";
-import localFont from "next/font/local";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import "./globals.css";
 import "@/olaSDK/style.css"
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
+
 
 export const metadata: Metadata = {
   title: "JalSync",
@@ -30,7 +21,7 @@ export default function RootLayout({
     <html lang="en">
       <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={''}
       >
 
         <Header />

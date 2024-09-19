@@ -88,7 +88,7 @@ const Navbar: React.FC = () => {
   const NavLink: React.FC<{ item: { name: string; href: string }; onClick?: () => void }> = ({ item, onClick }) => (
     <Link
       href={item.href}
-      className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+      className="px-4 py-2 text-md  font-semibold text-gray-700 hover:bg-gray-100 hover:text-gray-900"
       onClick={onClick}
     >
       {item.name}
@@ -98,7 +98,7 @@ const Navbar: React.FC = () => {
   const NavDropdown: React.FC<{ category: string; items: { name: string; href: string }[] }> = ({ category, items }) => (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="px-4 py-2 text-sm font-medium">
+        <Button variant="ghost" className="px-4 py-2 text-md font-semibold">
           {category} <ChevronDown className="ml-1 h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
@@ -122,7 +122,7 @@ const Navbar: React.FC = () => {
           <div className="hidden md:flex items-center space-x-4">
             {navItems.map((item, index) => (
               'category' in item ? (
-                <NavDropdown key={index} category={item.category} items={item.items} />
+                <NavDropdown key={index} category={item.category ?? ''} items={item.items ?? []} />
               ) : (
                 <NavLink key={index} item={item} />
               )

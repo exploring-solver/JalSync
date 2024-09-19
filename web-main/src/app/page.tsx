@@ -1,9 +1,10 @@
 "use client";
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { motion } from 'framer-motion';
-import dynamic from 'next/dynamic';
-import Product from '@/components/Model'
+import { AppleCardsCarouselDemo } from '@/components/applecarousel';
+import { Divider } from '@mui/material';
+
 // Dynamic import for Three.js related components
 
 const data = [
@@ -13,7 +14,7 @@ const data = [
   { name: 'Apr', assets: 2780, waterSupply: 3908 },
 ];
 
-const Carousel = ({ images }) => {
+const Carousel = ({ images }: { images: string[] }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
@@ -51,7 +52,7 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="min-h-screen py-12 px-6 mx-auto my-10 bg-gradient-to-r from-blue-100 to-green-100">
+    <div className="min-h-screen py-16 px-12 mx-auto  bg-gradient-to-r from-blue-100 to-green-100">
       <motion.div
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
@@ -71,7 +72,7 @@ const Dashboard = () => {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="bg-white p-6 rounded-lg shadow-lg"
         >
-          <h2 className="text-2xl font-semibold mb-4">Water Supply Analytics</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-center ">Water Supply Analytics</h2>
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={data}>
               <CartesianGrid strokeDasharray="3 3" />
@@ -88,20 +89,21 @@ const Dashboard = () => {
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.6 }}
-          className="mb-12 bg-white p-6 rounded-lg shadow-lg"
+          className="mb-12 bg-white px-6 py-8 rounded-lg shadow-lg"
         >
-          <h2 className="text-2xl font-semibold mb-4 text-left">Project Highlights</h2>
+          <h2 className="text-2xl font-semibold mb-4  text-center">Project Highlights</h2>
           <Carousel images={carouselImages} />
         </motion.div>
 
       </div>
 
-
+      <AppleCardsCarouselDemo/>
+      <Divider/>
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, delay: 0.8 }}
-        className="text-center"
+        className="text-center mt-8"
       >
         <h2 className="text-2xl font-semibold mb-4">Get Involved</h2>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-6">
