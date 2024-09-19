@@ -25,7 +25,7 @@ api.interceptors.request.use(
 export const login = (email, password) => {
     return api.post('/users/login', { email, password })
         .then((response) => {
-            console.log('Login successful:', response);
+            console.log('Login successful:');
             return response; // Return the response if needed for further processing
         })
         .catch((error) => {

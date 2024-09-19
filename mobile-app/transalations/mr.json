@@ -1,12 +1,30 @@
 {
-    "common": {
-      "login": "लॉगिन करा",
-      "register": "नोंदणी करा",
-      "dashboard": "डॅशबोर्ड",
-      "assets": "मालमत्ता",
-      "inventory": "इन्व्हेंटरी",
-      "finance": "वित्त",
-      "panchayats": "पंचायती",
-      "profile": "प्रोफाइल"
-    }
+  "language": "मराठी",
+  "common": {
+    "changeLanguage": "भाषा बदला",
+    "select": "निवडा",
+    "login": "लॉगिन करा",
+    "register": "नोंदणी करा",
+    "dashboard": "डॅशबोर्ड",
+    "assets": "मालमत्ता",
+    "inventory": "इन्व्हेंटरी",
+    "finance": "वित्त",
+    "panchayats": "पंचायती",
+    "profile": "प्रोफाइल",
+    "item": "आयटम",
+    "quantity": "प्रमाण",
+    "reorderLevel": "पुनः ऑर्डर स्तर",
+    "back": "परत"
+  },
+  "loginScreen": {
+    "title": "जलसिंक",
+    "subtitle": "ग्राम पंचायत, जीपी आणि ग्राहकांसाठी ऑल इन वन व्यवस्थापन डॅशबोर्ड",
+    "email": "ईमेल",
+    "password": "पासवर्ड",
+    "loginFailed": "लॉगिन अयशस्वी. कृपया आपले क्रेडेन्शियल्स तपासा."
+  },
+  "app": {
+    "mainStart": "मुख्य प्रारंभ",
+    "secondMainStart": "दुसरा मुख्य प्रारंभ"
   }
+}

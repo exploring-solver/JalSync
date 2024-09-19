@@ -28,12 +28,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Header/>
+
+        <Header />
         {children}
-        <Footer/>
+        <Footer />
       </body>
     </html>
   );

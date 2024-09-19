@@ -2,20 +2,41 @@
 
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import Link from 'next/link';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, ChevronDown } from 'lucide-react';
 import axios from 'axios';
 
-// Define navigation items
+// Define navigation items with categories
 const navItems = [
-  { name: 'Asset Management', href: '/assetmgmt' },
-  { name: 'Consumer Management', href: '/consumermgmt' },
-  { name: 'GIS', href: '/gis' },
-  { name: 'Finance', href: '/finance2' },
-  { name: 'Billing', href: '/billing' },
-  { name: 'Inventory', href: '/inv2' },
-  { name: 'Consumables', href: '/consumables' },
-  { name: 'Panchayats', href: '/panchayats' },
+  {
+    category: 'Management',
+    items: [
+      { name: 'Asset Management', href: '/assetmgmt' },
+      { name: 'Consumer Management', href: '/consumermgmt' },
+      { name: 'Panchayats', href: '/panchayats' },
+    ],
+  },
+  {
+    category: 'Operations',
+    items: [
+      { name: 'GIS', href: '/gis' },
+      { name: 'Inventory', href: '/inv2' },
+      { name: 'Consumables', href: '/consumables' },
+    ],
+  },
+  {
+    category: 'Finance',
+    items: [
+      { name: 'Finance', href: '/finance2' },
+      { name: 'Billing', href: '/billing' },
+    ],
+  },
   { name: 'About Us', href: '/about-us' },
 ];
 
@@ -33,7 +54,6 @@ const Navbar: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    // Retrieve user profile info from API if an access token exists
     const fetchUserProfile = async () => {
       const token = localStorage.getItem('accessToken');
       if (token) {
@@ -43,7 +63,7 @@ const Navbar: React.FC = () => {
               Authorization: `Bearer ${token}`,
             },
           });
-          setUser(response.data.name); // Assuming `name` is the field in the user profile response
+          setUser(response.data.name);
         } catch (error) {
           console.error('Error fetching user profile:', error);
         }
@@ -68,68 +88,119 @@ const Navbar: React.FC = () => {
   const NavLink: React.FC<{ item: { name: string; href: string }; onClick?: () => void }> = ({ item, onClick }) => (
     <Link
       href={item.href}
-      className="px-4 py-2 rounded-lg text-md font-medium hover:bg-blue-700 hover:text-white transition-colors duration-300"
+      className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900"
       onClick={onClick}
     >
       {item.name}
     </Link>
   );
 
-  return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-white text-blue-800 shadow-md' : 'bg-transparent text-black'}`}>
-      <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-        <Link href="/" className="font-bold text-xl transition-colors duration-300">
-          JalSync
-        </Link>
-        <div className="hidden md:flex space-x-4">
-          {navItems.map((item) => (
-            <NavLink key={item.name} item={item} />
-          ))}
-          {!user ? (
-            <>
-              <Link href="/login" className="px-4 py-2 rounded-lg bg-blue-700 text-white hover:bg-blue-900 transition-colors duration-300">
-                Login
-              </Link>
-              <Link href="/register" className="px-4 py-2 rounded-lg bg-blue-700 text-white hover:bg-blue-900 transition-colors duration-300">
-                Register
-              </Link>
-            </>
-          ) : (
-            <>
-              <Link href="/profile" className="px-4 py-2 rounded-lg bg-green-700 text-white hover:bg-green-900 transition-colors duration-300">
-                {user}
-              </Link>
-              <Button onClick={handleLogout} className="px-4 py-2 rounded-lg bg-red-700 text-white hover:bg-red-900">
-                Logout
-              </Button>
-            </>
-          )}
-        </div>
-        <Button
-          onClick={toggleSidebar}
-          variant="default"
-          size="icon"
-          className="md:hidden"
-          aria-label="Toggle menu"
-        >
-          {isSidebarOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+  const NavDropdown: React.FC<{ category: string; items: { name: string; href: string }[] }> = ({ category, items }) => (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" className="px-4 py-2 text-sm font-medium">
+          {category} <ChevronDown className="ml-1 h-4 w-4" />
         </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        {items.map((item) => (
+          <DropdownMenuItem key={item.name}>
+            <NavLink item={item} />
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+
+  return (
+    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-white shadow-md' : 'bg-transparent'}`}>
+      <div className="container mx-auto px-6 py-4">
+        <div className="flex justify-between items-center">
+          <Link href="/" className="font-bold text-xl text-blue-800">
+            JalSync
+          </Link>
+          <div className="hidden md:flex items-center space-x-4">
+            {navItems.map((item, index) => (
+              'category' in item ? (
+                <NavDropdown key={index} category={item.category} items={item.items} />
+              ) : (
+                <NavLink key={index} item={item} />
+              )
+            ))}
+            {!user ? (
+              <>
+                <Link href="/login" className="px-4 py-2 rounded-lg bg-blue-700 text-white hover:bg-blue-800 transition-colors duration-300">
+                  Login
+                </Link>
+                <Link href="/register" className="px-4 py-2 rounded-lg bg-blue-700 text-white hover:bg-blue-800 transition-colors duration-300">
+                  Register
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link href="/profile" className="px-4 py-2 rounded-lg bg-green-700 text-white hover:bg-green-800 transition-colors duration-300">
+                  {user}
+                </Link>
+                <Button onClick={handleLogout} className="px-4 py-2 rounded-lg bg-red-700 text-white hover:bg-red-800">
+                  Logout
+                </Button>
+              </>
+            )}
+          </div>
+          <Button
+            onClick={toggleSidebar}
+            variant="ghost"
+            size="icon"
+            className="md:hidden"
+            aria-label="Toggle menu"
+          >
+            {isSidebarOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </Button>
+        </div>
       </div>
       {isSidebarOpen && (
         <div className="fixed inset-0 bg-black/50 z-40" onClick={closeSidebar}>
           <div
-            className="fixed right-0 top-0 h-full w-64 bg-white shadow-lg z-50"
+            className="fixed right-0 top-0 h-full w-64 bg-white shadow-lg z-50 overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-end p-4">
-              <Button onClick={closeSidebar} variant="default" size="icon">
+              <Button onClick={closeSidebar} variant="ghost" size="icon">
                 <X className="h-6 w-6" />
               </Button>
             </div>
             <nav className="flex flex-col space-y-4 p-4">
-              {navItems.map((item) => (
-                <NavLink key={item.name} item={item} onClick={closeSidebar} />
+              {navItems.map((item, index) => (
+                'category' in item ? (
+                  <div key={index}>
+                    <h3 className="font-semibold text-sm text-gray-500 uppercase tracking-wider mb-2">{item.category}</h3>
+                    {item.items.map((subItem) => (
+                      <NavLink key={subItem.name} item={subItem} onClick={closeSidebar} />
+                    ))}
+                  </div>
+                ) : (
+                  <NavLink key={index} item={item} onClick={closeSidebar} />
+                )
               ))}
+              {!user ? (
+                <>
+                  <Link href="/login" className="px-4 py-2 rounded-lg bg-blue-700 text-white hover:bg-blue-800 transition-colors duration-300">
+                    Login
+                  </Link>
+                  <Link href="/register" className="px-4 py-2 rounded-lg bg-blue-700 text-white hover:bg-blue-800 transition-colors duration-300">
+                    Register
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link href="/profile" className="px-4 py-2 rounded-lg bg-green-700 text-white hover:bg-green-800 transition-colors duration-300">
+                    {user}
+                  </Link>
+                  <Button onClick={handleLogout} className="px-4 py-2 rounded-lg bg-red-700 text-white hover:bg-red-800">
+                    Logout
+                  </Button>
+                </>
+              )}
             </nav>
           </div>
         </div>

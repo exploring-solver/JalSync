@@ -1,12 +1,86 @@
 {
-    "common": {
-      "login": "लॉग इन करें",
-      "register": "पंजीकरण करें",
-      "dashboard": "डैशबोर्ड",
-      "assets": "संपत्तियाँ",
-      "inventory": "इन्वेंटरी",
-      "finance": "वित्त",
-      "panchayats": "पंचायतें",
-      "profile": "प्रोफ़ाइल"
-    }
+  "language": "हिंदी",
+  "common": {
+    "changeLanguage": "भाषा बदलें",
+    "select": "चुनें",
+    "login": "लॉग इन करें",
+    "register": "पंजीकरण करें",
+    "dashboard": "डैशबोर्ड",
+    "assets": "संपत्तियाँ",
+    "inventory": "इन्वेंटरी",
+    "finance": "वित्त",
+    "panchayats": "पंचायतें",
+    "profile": "प्रोफ़ाइल",
+    "logout": "लॉग आउट",
+    "back": "वापस",
+    "item": "आयटम",
+    "quantity": "मात्रा",
+    "reorderLevel": "पुनः ऑर्डर स्तर",
+    "status": "स्थिति",
+    "name": "नाम"
+  },
+  "loginScreen": {
+    "title": "जलसिंक",
+    "subtitle": "ग्राम पंचायत, जीपी और उपभोक्ताओं के लिए ऑल इन वन मैनेजमेंट डैशबोर्ड",
+    "email": "ईमेल",
+    "password": "पासवर्ड",
+    "loginFailed": "लॉगिन विफल। कृपया अपने प्रमाण पत्र जांचें।"
+  },
+  "dashboard": {
+    "title": "डैशबोर्ड",
+    "assetManagement": "संपत्ति प्रबंधन",
+    "inventoryManagement": "इन्वेंटरी प्रबंधन",
+    "financialManagement": "वित्तीय प्रबंधन",
+    "billingPayment": "बिलिंग और भुगतान"
+  },
+  "assetManagement": {
+    "title": "संपत्ति प्रबंधन",
+    "updateStatus": "स्थिति अपडेट करें"
+  },
+  "inventoryManagement": {
+    "title": "इन्वेंटरी प्रबंधन",
+    "updateStock": "स्टॉक अपडेट करें"
+  },
+  "financialManagement": {
+    "title": "वित्तीय प्रबंधन"
+  },
+  "billingPayment": {
+    "title": "बिलिंग और भुगतान",
+    "consumerId": "उपभोक्ता आईडी",
+    "amount": "राशि",
+    "date": "तारीख",
+    "status": "स्थिति",
+    "updateStatus": "स्थिति अपडेट करें",
+    "payBill": "बिल भुगतान करें"
+  },
+  "consumerDashboard": {
+    "title": "उपभोक्ता डैशबोर्ड",
+    "name": "नाम",
+    "address": "पता",
+    "contact": "संपर्क",
+    "yourBills": "आपके बिल",
+    "processing": "प्रसंस्करण हो रहा है..."
+  },
+  "reportIssue": {
+    "title": "पानी की आपूर्ति की समस्या की रिपोर्ट करें",
+    "describeIssue": "समस्या का वर्णन करें",
+    "submitIssue": "समस्या सबमिट करें"
+  },
+  "scheduleMaintenance": {
+    "title": "रखरखाव शेड्यूल करें",
+    "selectAsset": "संपत्ति चुनें",
+    "maintenanceDate": "रखरखाव की तारीख (YYYY-MM-DD)",
+    "maintenanceDescription": "रखरखाव का विवरण",
+    "scheduleMaintenance": "रखरखाव शेड्यूल करें"
+  },
+  "orderSuccess": {
+    "title": "भुगतान सफल!",
+    "billId": "बिल आईडी",
+    "amountPaid": "भुगतान की गई राशि",
+    "backToBills": "बिलों पर वापस जाएं"
+  },
+  "app": {
+    "mainStart": "मुख्य प्रारंभ",
+    "secondMainStart": "दूसरा मुख्य प्रारंभ"
   }
+}

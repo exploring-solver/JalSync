@@ -1,12 +1,83 @@
 {
-    "common": {
-      "login": "Login",
-      "register": "Register",
-      "dashboard": "Dashboard",
-      "assets": "Assets",
-      "inventory": "Inventory",
-      "finance": "Finance",
-      "panchayats": "Panchayats",
-      "profile": "Profile"
-    }
+  "language": "English",
+  "common": {
+    "changeLanguage": "Change Language",
+    "select": "Select",
+    "login": "Login",
+    "register": "Register",
+    "dashboard": "Dashboard",
+    "assets": "Assets",
+    "inventory": "Inventory",
+    "finance": "Finance",
+    "panchayats": "Panchayats",
+    "profile": "Profile",
+    "logout": "Logout",
+    "back": "Back",
+    "name": "Name",
+        "status": "Status"
+  },
+  "loginScreen": {
+    "title": "JalSync",
+    "subtitle": "All in one Management Dashboard for Gram Panchayat, GP and Consumers",
+    "email": "Email",
+    "password": "Password",
+    "loginFailed": "Login failed. Please check your credentials."
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "assetManagement": "Asset Management",
+    "inventoryManagement": "Inventory Management",
+    "financialManagement": "Financial Management",
+    "billingPayment": "Billing & Payment"
+  },
+  "assetManagement": {
+    "title": "Asset Management",
+    "updateStatus": "Update Status"
+  },
+  "inventoryManagement": {
+    "title": "Inventory Management",
+    "updateStock": "Update Stock"
+  },
+  "financialManagement": {
+    "title": "Financial Management"
+  },
+  "billingPayment": {
+    "title": "Billing & Payment",
+    "consumerId": "Consumer ID",
+    "amount": "Amount",
+    "date": "Date",
+    "status": "Status",
+    "updateStatus": "Update Status",
+    "payBill": "Pay Bill"
+  },
+  "consumerDashboard": {
+    "title": "Consumer Dashboard",
+    "name": "Name",
+    "address": "Address",
+    "contact": "Contact",
+    "yourBills": "Your Bills",
+    "processing": "Processing..."
+  },
+  "reportIssue": {
+    "title": "Report Water Supply Issue",
+    "describeIssue": "Describe the issue",
+    "submitIssue": "Submit Issue"
+  },
+  "scheduleMaintenance": {
+    "title": "Schedule Maintenance",
+    "selectAsset": "Select Asset",
+    "maintenanceDate": "Maintenance Date (YYYY-MM-DD)",
+    "maintenanceDescription": "Maintenance Description",
+    "scheduleMaintenance": "Schedule Maintenance"
+  },
+  "orderSuccess": {
+    "title": "Payment Successful!",
+    "billId": "Bill ID",
+    "amountPaid": "Amount Paid",
+    "backToBills": "Back to Bills"
+  },
+  "app": {
+    "mainStart": "Main Start",
+    "secondMainStart": "Second Main Start"
   }
+}

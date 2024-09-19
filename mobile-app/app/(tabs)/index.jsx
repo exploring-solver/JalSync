@@ -7,32 +7,26 @@ import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { View, Text } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 
-// import AssetsScreen from '../screens/AssetsScreen';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
-// import InventoryScreen from '../screens/InventoryScreen';
-// import FinanceScreen from '../screens/FinanceScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import DashboardScreen from '../screens/DashboardScreen';
-import {PanchayatsScreen,AssetsScreen, BillingsScreen, ConsumablesScreen} from '../screens/EntityScreen';
+import {PanchayatsScreen, AssetsScreen, BillingsScreen, ConsumablesScreen} from '../screens/EntityScreen';
 import MainStartScreen from '../screens/MainStartScreen';
 import SecondMainStartScreen from '../screens/SecondMainScreen';
 import { getToken } from '@/services/authStorage';
-// import './i18n';
-// import { useTranslation } from 'react-i18next';
+import './i18n';
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
-
-
-
 function MainTabNavigator() {
   const { t } = useTranslation();
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -57,18 +51,20 @@ function MainTabNavigator() {
         },
       })}
     >
-      <Tab.Screen name="Dashboard" component={MainStartScreen} />
-      <Tab.Screen name="Assets" component={AssetsScreen} />
-      <Tab.Screen name="Inventory" component={ConsumablesScreen} />
-      <Tab.Screen name="Finance" component={BillingsScreen} />
-      <Tab.Screen name="Panchayats" component={PanchayatsScreen} />
-      <Tab.Screen name="Profile" component={ProfileScreen} />
+      <Tab.Screen name="Dashboard" component={MainStartScreen} options={{ title: t('common.dashboard') }} />
+      <Tab.Screen name="Assets" component={AssetsScreen} options={{ title: t('common.assets') }} />
+      <Tab.Screen name="Inventory" component={ConsumablesScreen} options={{ title: t('common.inventory') }} />
+      <Tab.Screen name="Finance" component={BillingsScreen} options={{ title: t('common.finance') }} />
+      <Tab.Screen name="Panchayats" component={PanchayatsScreen} options={{ title: t('common.panchayats') }} />
+      <Tab.Screen name="Profile" component={ProfileScreen} options={{ title: t('common.profile') }} />
     </Tab.Navigator>
   );
 }
 
 function AppNavigator() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const { t } = useTranslation();
+
   return (
     <Stack.Navigator initialRouteName="Login">
       {!isAuthenticated ? (
@@ -76,7 +72,7 @@ function AppNavigator() {
           <Stack.Screen name="Login" options={{ headerShown: false }}>
             {props => <LoginScreen {...props} setIsAuthenticated={setIsAuthenticated} />}
           </Stack.Screen>
-          <Stack.Screen name="Register" component={RegisterScreen} />
+          <Stack.Screen name="Register" component={RegisterScreen} options={{ title: t('common.register') }} />
         </>
       ) : (
         <>

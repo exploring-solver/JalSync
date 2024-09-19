@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { Button } from 'react-native-paper';
 import { getUserProfile } from '../../services/api';  // Import the function from api.js
 import { removeToken } from '@/services/authStorage';
+import { Language } from '@/components/Language';
 
 const ProfileScreen = () => {
   const [profile, setProfile] = useState(null);   // State to store profile data
@@ -65,6 +66,7 @@ const ProfileScreen = () => {
       <Button style={styles.button} mode="contained" onPress={() => removeToken()}>
         Logout
       </Button>
+      <Language/>
     </View>
   );
 };

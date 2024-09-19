@@ -11,6 +11,7 @@ import * as Linking from 'expo-linking';
 import * as WebBrowser from 'expo-web-browser';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
 
 // Mock data
 const assets = [
@@ -18,13 +19,11 @@ const assets = [
     { id: 2, name: 'Pipeline B', location: { latitude: 20.6037, longitude: 78.9729 }, status: 'Needs Maintenance' },
     { id: 3, name: 'Treatment Plant C', location: { latitude: 20.5837, longitude: 78.9529 }, status: 'Under Repair' },
 ];
-
 const inventory = [
     { id: 1, name: 'Chlorine', quantity: 500, reorderLevel: 100 },
     { id: 2, name: 'Filters', quantity: 50, reorderLevel: 20 },
     { id: 3, name: 'Pipes', quantity: 200, reorderLevel: 50 },
 ];
-
 const financials = [
     { id: 1, type: 'Income', amount: 50000, date: '2024-09-01', description: 'Monthly water charges' },
     { id: 2, type: 'Expense', amount: 20000, date: '2024-09-05', description: 'Pump maintenance' },
@@ -44,7 +43,8 @@ const consumers = [
 ];
 
 // Login Screen
-const LoginScreen = ({ setCurrentScreen, setUserRole }) => {
+const LoginScreen = ({ setCurrentScreen,t, setUserRole }) => {
+    
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
@@ -60,35 +60,38 @@ const LoginScreen = ({ setCurrentScreen, setUserRole }) => {
             setUserRole('Consumer');
             setCurrentScreen('ConsumerDashboard');
         } else {
-            alert('Invalid credentials');
+            alert('loginScreen');
         }
     };
 
     return (
         <View style={styles.loginContainer}>
-            <Text style={styles.title}>JalSync</Text>
+            <Text style={styles.title}>{t('loginScreen.title')}</Text>
             <TextInput
                 style={styles.input}
-                placeholder="Username"
+                placeholder={t('loginScreen.email')}
                 value={username}
                 onChangeText={setUsername}
             />
             <TextInput
                 style={styles.input}
-                placeholder="Password"
+                placeholder={t('loginScreen.password')}
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry
             />
             <TouchableOpacity style={styles.button} onPress={handleLogin}>
-                <Text style={styles.buttonText}>Login</Text>
+                <Text style={styles.buttonText}>{t('common.login')}</Text>
             </TouchableOpacity>
         </View>
     );
 };
 
 // Dashboard Screen
-const DashboardScreen = ({ setCurrentScreen, userRole }) => {
+
+const DashboardScreen = ({ setCurrentScreen,t, userRole }) => {
+    
+    
     const chartConfig = {
         backgroundGradientFrom: '#ffffff',
         backgroundGradientTo: '#ffffff',
@@ -96,7 +99,12 @@ const DashboardScreen = ({ setCurrentScreen, userRole }) => {
     };
 
     const data = {
-        labels: ['Assets', 'Inventory', 'Finance', 'Billing'],
+        labels: [
+            t('dashboard.assetManagement'), 
+            t('dashboard.inventoryManagement'), 
+            t('dashboard.financialManagement'), 
+            t('dashboard.billingPayment')
+        ],
         datasets: [
             {
                 data: [assets.length, inventory.length, financials.length, bills.length],
@@ -106,7 +114,7 @@ const DashboardScreen = ({ setCurrentScreen, userRole }) => {
 
     return (
         <ScrollView style={styles.scrollView}>
-            <Text style={styles.title}>Dashboard ({userRole} User)</Text>
+            <Text style={styles.title}>{`${t('dashboard.title')} ${userRole}`}</Text>
             <BarChart
                 data={data}
                 width={350}
@@ -115,29 +123,32 @@ const DashboardScreen = ({ setCurrentScreen, userRole }) => {
                 style={styles.chart}
             />
             <TouchableOpacity style={styles.button} onPress={() => setCurrentScreen('AssetManagement')}>
-                <Text style={styles.buttonText}>Asset Management</Text>
+                <Text style={styles.buttonText}>{t('dashboard.assetManagement')}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.button} onPress={() => setCurrentScreen('InventoryManagement')}>
-                <Text style={styles.buttonText}>Inventory Management</Text>
+                <Text style={styles.buttonText}>{t('dashboard.inventoryManagement')}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.button} onPress={() => setCurrentScreen('FinancialManagement')}>
-                <Text style={styles.buttonText}>Financial Management</Text>
+                <Text style={styles.buttonText}>{t('dashboard.financialManagement')}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.button} onPress={() => setCurrentScreen('BillingPayment')}>
-                <Text style={styles.buttonText}>Billing & Payment</Text>
+                <Text style={styles.buttonText}>{t('dashboard.billingPayment')}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.button} onPress={() => setCurrentScreen('Login')}>
-                <Text style={styles.buttonText}>Logout</Text>
+                <Text style={styles.buttonText}>{t('common.logout')}</Text>
             </TouchableOpacity>
         </ScrollView>
     );
 };
 
+
 // Asset Management Screen
-const AssetManagementScreen = ({ setCurrentScreen }) => {
+const AssetManagementScreen = ({ t,setCurrentScreen }) => {
+    
+
     return (
         <ScrollView style={styles.scrollView}>
-            <Text style={styles.title}>Asset Management</Text>
+            <Text style={styles.title}>{t('assetManagement.title')}</Text>
             <MapView
                 style={styles.map}
                 initialRegion={{
@@ -158,22 +169,24 @@ const AssetManagementScreen = ({ setCurrentScreen }) => {
             </MapView>
             {assets.map((asset) => (
                 <View key={asset.id} style={styles.listItem}>
-                    <Text>Name: {asset.name}</Text>
-                    <Text>Status: {asset.status}</Text>
+                    <Text>{t('common.name')}: {asset.name}</Text>
+                    <Text>{t('common.status')}: {asset.status}</Text>
                     <TouchableOpacity style={styles.smallButton}>
-                        <Text style={styles.buttonText}>Update Status</Text>
+                        <Text style={styles.buttonText}>{t('assetManagement.updateStatus')}</Text>
                     </TouchableOpacity>
                 </View>
             ))}
             <TouchableOpacity style={styles.button} onPress={() => setCurrentScreen('Dashboard')}>
-                <Text style={styles.buttonText}>Back to Dashboard</Text>
+                <Text style={styles.buttonText}>{t('common.back')}</Text>
             </TouchableOpacity>
         </ScrollView>
     );
 };
 
 // Inventory Management Screen
-const InventoryManagementScreen = ({ setCurrentScreen }) => {
+const InventoryManagementScreen = ({t, setCurrentScreen }) => {
+    
+
     const chartConfig = {
         backgroundGradientFrom: '#ffffff',
         backgroundGradientTo: '#ffffff',
@@ -191,7 +204,7 @@ const InventoryManagementScreen = ({ setCurrentScreen }) => {
 
     return (
         <ScrollView style={styles.scrollView}>
-            <Text style={styles.title}>Inventory Management</Text>
+            <Text style={styles.title}>{t('inventoryManagement.title')}</Text>
             <BarChart
                 data={data}
                 width={350}
@@ -201,16 +214,16 @@ const InventoryManagementScreen = ({ setCurrentScreen }) => {
             />
             {inventory.map((item) => (
                 <View key={item.id} style={styles.listItem}>
-                    <Text>Item: {item.name}</Text>
-                    <Text>Quantity: {item.quantity}</Text>
-                    <Text>Reorder Level: {item.reorderLevel}</Text>
+                    <Text>{t('common.item')}: {item.name}</Text>
+                    <Text>{t('common.quantity')}: {item.quantity}</Text>
+                    <Text>{t('common.reorderLevel')}: {item.reorderLevel}</Text>
                     <TouchableOpacity style={styles.smallButton}>
-                        <Text style={styles.buttonText}>Update Stock</Text>
+                        <Text style={styles.buttonText}>{t('inventoryManagement.updateStock')}</Text>
                     </TouchableOpacity>
                 </View>
             ))}
             <TouchableOpacity style={styles.button} onPress={() => setCurrentScreen('Dashboard')}>
-                <Text style={styles.buttonText}>Back to Dashboard</Text>
+                <Text style={styles.buttonText}>{t('common.back')}</Text>
             </TouchableOpacity>
         </ScrollView>
     );
@@ -267,7 +280,7 @@ const FinancialManagementScreen = ({ setCurrentScreen }) => {
     );
 };
 
-const BillingPaymentScreen = ({ setCurrentScreen, userRole }) => {
+const BillingPaymentScreen = ({ setCurrentScreen,t, userRole }) => {
     const [bills, setBills] = useState([]);
     const [selectedBill, setSelectedBill] = useState(null);
     const url = "http://your-api-url.com"; // Update with your actual API URL
@@ -395,7 +408,7 @@ const BillingPaymentScreen = ({ setCurrentScreen, userRole }) => {
     );
 };
 
-const OrderSuccessScreen = ({ setCurrentScreen, billDetails }) => {
+const OrderSuccessScreen = ({ setCurrentScreen,t, billDetails }) => {
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 }}>
@@ -679,31 +692,32 @@ const ScheduleMaintenanceScreen = ({ setCurrentScreen }) => {
 const SecondMainScreen = () => {
     const [currentScreen, setCurrentScreen] = useState('Login');
     const [userRole, setUserRole] = useState(null);
+    const {t} = useTranslation();
 
     const renderScreen = () => {
         switch (currentScreen) {
             case 'Login':
-                return <LoginScreen setCurrentScreen={setCurrentScreen} setUserRole={setUserRole} />;
+                return <LoginScreen t={t} setCurrentScreen={setCurrentScreen} setUserRole={setUserRole} />;
             case 'Dashboard':
-                return <DashboardScreen setCurrentScreen={setCurrentScreen} userRole={userRole} />;
+                return <DashboardScreen t={t} setCurrentScreen={setCurrentScreen} userRole={userRole} />;
             case 'AssetManagement':
-                return <AssetManagementScreen setCurrentScreen={setCurrentScreen} />;
+                return <AssetManagementScreen t={t} setCurrentScreen={setCurrentScreen} />;
             case 'InventoryManagement':
-                return <InventoryManagementScreen setCurrentScreen={setCurrentScreen} />;
+                return <InventoryManagementScreen t={t} setCurrentScreen={setCurrentScreen} />;
             case 'FinancialManagement':
-                return <FinancialManagementScreen setCurrentScreen={setCurrentScreen} />;
+                return <FinancialManagementScreen t={t} setCurrentScreen={setCurrentScreen} />;
             case 'BillingPayment':
-                return <BillingPaymentScreen setCurrentScreen={setCurrentScreen} userRole={userRole} />;
+                return <BillingPaymentScreen t={t} setCurrentScreen={setCurrentScreen} userRole={userRole} />;
             case 'ConsumerDashboard':
-                return <ConsumerDashboardScreen setCurrentScreen={setCurrentScreen} />;
+                return <ConsumerDashboardScreen t={t} setCurrentScreen={setCurrentScreen} />;
             case 'ReportIssue':
-                return <ReportIssueScreen setCurrentScreen={setCurrentScreen} />;
+                return <ReportIssueScreen t={t} setCurrentScreen={setCurrentScreen} />;
             case 'ScheduleMaintenance':
-                return <ScheduleMaintenanceScreen setCurrentScreen={setCurrentScreen} />;
+                return <ScheduleMaintenanceScreen t={t} setCurrentScreen={setCurrentScreen} />;
             case 'OrderSuccess':
-                return <OrderSuccessScreen setCurrentScreen={setCurrentScreen} />;
+                return <OrderSuccessScreen t={t} setCurrentScreen={setCurrentScreen} />;
             default:
-                return <LoginScreen setCurrentScreen={setCurrentScreen} setUserRole={setUserRole} />;
+                return <LoginScreen t={t} setCurrentScreen={setCurrentScreen} setUserRole={setUserRole} />;
         }
     };
 
