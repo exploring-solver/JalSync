@@ -85,23 +85,19 @@ export const Carousel = ({ items }: CarouselProps) => {
 
 export const CarouselDemo = () => {
   const data = [
-    { src: "/imgs/1.jpg", title: "Login Screen", description: "Manage user authentication and access control." },
+    { src: "/imgs/15.jpg", title: "JalSync's Logo", description: "Our Splash Screen" },
+    { src: "/imgs/11.jpg", title: "Login Screen", description: "Manage user authentication and access control." },
+    { src: "/imgs/12.jpg", title: "Login Screen In Hindi", description: "Manage user authentication and access control." },
+    { src: "/imgs/14.jpg", title: "Multi-Lingual Support", description: "Access of most used languages in India" },
+    { src: "/imgs/7.jpg", title: "User Profile / Language Change", description: "Track User Profile" },
     { src: "/imgs/2.jpg", title: "Dashboard Screen", description: "View key metrics and manage system operations." },
-    { src: "/imgs/3.jpg", title: "Asset Management", description: "Track and maintain water supply infrastructure." },
-    { src: "/imgs/4.jpg", title: "Inventory Management", description: "Manage and forecast inventory of consumables." },
+    { src: "/imgs/13.jpg", title: "GIS Mapping & Asset Management", description: "Track and maintain water supply infrastructure." },
+    { src: "/imgs/8.jpg", title: "Inventory Management", description: "Manage and forecast inventory of consumables." },
     { src: "/imgs/10.jpg", title: "Financial Management", description: "Handle financial transactions and record-keeping." },
-    { src: "/imgs/6.jpg", title: "Billing & Payment", description: "Generate and process consumer bills." },
-    { src: "/imgs/7.jpg", title: "Consumer Dashboard", description: "Track outstanding bills and payment history." },
-    { src: "/imgs/8.jpg", title: "Report Issue", description: "Submit and track issues with water supply." },
-    { src: "/imgs/9.jpg", title: "Schedule Maintenance", description: "Plan and manage maintenance schedules." },
-    { src: "/imgs/10.jpg", title: "Order Success", description: "Confirm and track successful orders." },
-    { src: "/imgs/11.jpg", title: "Order Success", description: "Confirm and track successful orders." },
-    { src: "/imgs/12.jpg", title: "Order Success", description: "Confirm and track successful orders." },
-    { src: "/imgs/13.jpg", title: "Order Success", description: "Confirm and track successful orders." },
-    { src: "/imgs/14.jpg", title: "Order Success", description: "Confirm and track successful orders." },
-    { src: "/imgs/15.jpg", title: "Order Success", description: "Confirm and track successful orders." },
-    { src: "/imgs/16.jpg", title: "Order Success", description: "Confirm and track successful orders." },
-  ];
+    { src: "/imgs/9.jpg", title: "Addition of Assets", description: "Addition of assets via Gram Panchayat" },
+    { src: "/imgs/payment1.png", title: "Payment Gateway", description: "Bills Payment's are powered by RazorPay" },
+    { src: "/imgs/payment2.png", title: "Selecting Bank On Razorpay", description: "Bills Payment's are powered by RazorPay" },
+    ];
 
   return (
     <div className="w-full h-full py-20">
