@@ -51,7 +51,7 @@ function MainTabNavigator() {
         },
       })}
     >
-      <Tab.Screen name="Dashboard" component={MainStartScreen} options={{ title: t('common.dashboard') }} />
+      <Tab.Screen name="Dashboard" component={SecondMainStartScreen} options={{ title: t('common.dashboard') }} />
       <Tab.Screen name="Assets" component={AssetsScreen} options={{ title: t('common.assets') }} />
       <Tab.Screen name="Inventory" component={ConsumablesScreen} options={{ title: t('common.inventory') }} />
       <Tab.Screen name="Finance" component={BillingsScreen} options={{ title: t('common.finance') }} />

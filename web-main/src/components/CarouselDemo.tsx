@@ -1,0 +1,114 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+"use client";
+import React, { useState, useRef } from "react";
+import Image from "next/image";
+import { IconArrowNarrowLeft, IconArrowNarrowRight } from "@tabler/icons-react";
+import { motion } from "framer-motion";
+
+interface CarouselProps {
+  items: { src: string; title: string }[];
+}
+
+export const Carousel = ({ items }: CarouselProps) => {
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+
+  const checkScrollability = () => {
+    if (carouselRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = carouselRef.current;
+      setCanScrollLeft(scrollLeft > 0);
+      setCanScrollRight(scrollLeft < scrollWidth - clientWidth);
+    }
+  };
+
+  const scrollLeft = () => {
+    if (carouselRef.current) {
+      carouselRef.current.scrollBy({ left: -300, behavior: "smooth" });
+    }
+  };
+
+  const scrollRight = () => {
+    if (carouselRef.current) {
+      carouselRef.current.scrollBy({ left: 300, behavior: "smooth" });
+    }
+  };
+
+  return (
+    <div className="relative w-full">
+      <div
+        className="flex w-full overflow-x-scroll py-10 scroll-smooth scrollbar-hide"
+        ref={carouselRef}
+        onScroll={checkScrollability}
+      >
+        <div className="flex gap-4 pl-4">
+          {items.map((item, index) => (
+            <motion.div
+              key={index}
+              className="relative h-80 w-56 md:h-[30rem] md:w-72 rounded-3xl overflow-hidden group"
+            >
+              <Image
+                src={item.src}
+                alt={item.title}
+                fill
+                className="object-cover p-2 border-2 border-black rounded"
+              />
+              {/* Hover effect */}
+              <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center flex-col">
+                <p className="text-white text-xl font-bold">{item.title}</p>
+                <p className="text-white text-center">{item.description}</p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+
+      <div className="absolute flex justify-between w-full top-1/2 -translate-y-1/2 px-4">
+        <button
+          onClick={scrollLeft}
+          disabled={!canScrollLeft}
+          className="bg-gray-100 p-2 rounded-full disabled:opacity-50"
+        >
+          <IconArrowNarrowLeft className="h-6 w-6 text-gray-500" />
+        </button>
+        <button
+          onClick={scrollRight}
+          disabled={!canScrollRight}
+          className="bg-gray-100 p-2 rounded-full disabled:opacity-50"
+        >
+          <IconArrowNarrowRight className="h-6 w-6 text-gray-500" />
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export const CarouselDemo = () => {
+  const data = [
+    { src: "/imgs/1.jpg", title: "Login Screen", description: "Manage user authentication and access control." },
+    { src: "/imgs/2.jpg", title: "Dashboard Screen", description: "View key metrics and manage system operations." },
+    { src: "/imgs/3.jpg", title: "Asset Management", description: "Track and maintain water supply infrastructure." },
+    { src: "/imgs/4.jpg", title: "Inventory Management", description: "Manage and forecast inventory of consumables." },
+    { src: "/imgs/10.jpg", title: "Financial Management", description: "Handle financial transactions and record-keeping." },
+    { src: "/imgs/6.jpg", title: "Billing & Payment", description: "Generate and process consumer bills." },
+    { src: "/imgs/7.jpg", title: "Consumer Dashboard", description: "Track outstanding bills and payment history." },
+    { src: "/imgs/8.jpg", title: "Report Issue", description: "Submit and track issues with water supply." },
+    { src: "/imgs/9.jpg", title: "Schedule Maintenance", description: "Plan and manage maintenance schedules." },
+    { src: "/imgs/10.jpg", title: "Order Success", description: "Confirm and track successful orders." },
+    { src: "/imgs/11.jpg", title: "Order Success", description: "Confirm and track successful orders." },
+    { src: "/imgs/12.jpg", title: "Order Success", description: "Confirm and track successful orders." },
+    { src: "/imgs/13.jpg", title: "Order Success", description: "Confirm and track successful orders." },
+    { src: "/imgs/14.jpg", title: "Order Success", description: "Confirm and track successful orders." },
+    { src: "/imgs/15.jpg", title: "Order Success", description: "Confirm and track successful orders." },
+    { src: "/imgs/16.jpg", title: "Order Success", description: "Confirm and track successful orders." },
+  ];
+
+  return (
+    <div className="w-full h-full py-20">
+      <h2 className="text-center text-2xl md:text-5xl font-bold mb-8">
+        App UI Showcase
+      </h2>
+      <Carousel items={data} />
+    </div>
+  );
+};

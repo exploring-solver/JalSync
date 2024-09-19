@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { motion } from 'framer-motion';
-import { AppleCardsCarouselDemo } from '@/components/applecarousel';
+import { CarouselDemo } from '@/components/CarouselDemo';
 import { Divider } from '@mui/material';
 
 // Dynamic import for Three.js related components
@@ -86,6 +86,26 @@ const Dashboard = () => {
           </ResponsiveContainer>
         </motion.div>
         <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.6 }}
+        className="bg-white p-8 rounded-lg shadow-xl mb-16"
+      >
+        <h2 className="text-3xl font-semibold mb-6 text-blue-700">Impact Analytics</h2>
+        <ResponsiveContainer width="100%" height={400}>
+          <LineChart data={data}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" />
+            <YAxis yAxisId="left" />
+            <YAxis yAxisId="right" orientation="right" />
+            <Tooltip />
+            <Legend />
+            <Line yAxisId="left" type="monotone" dataKey="households" stroke="#8884d8" name="Households Reached" />
+            <Line yAxisId="right" type="monotone" dataKey="waterSupply" stroke="#82ca9d" name="Water Supply (KL)" />
+          </LineChart>
+        </ResponsiveContainer>
+      </motion.div>
+        <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.6 }}
@@ -97,7 +117,7 @@ const Dashboard = () => {
 
       </div>
 
-      <AppleCardsCarouselDemo/>
+      <CarouselDemo/>
       <Divider/>
       <motion.div
         initial={{ opacity: 0 }}
