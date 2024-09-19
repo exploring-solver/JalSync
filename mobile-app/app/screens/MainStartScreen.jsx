@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, Button, TextInput, FlatList, ScrollView, StyleSheet, Alert } from 'react-native';
+import { View, Text, Button, TextInput, FlatList, ScrollView, StyleSheet } from 'react-native';
 import { PieChart } from 'react-native-chart-kit'; // For charting
 import { Dimensions } from 'react-native';
-import * as FileSystem from 'expo-file-system'; // File system access
-import * as Sharing from 'expo-sharing'; // Sharing functionality
+import * as WebBrowser from 'expo-web-browser'; // For opening the PDF in a browser
 
 const MainStartScreen = () => {
   const [consumerData, setConsumerData] = useState([
@@ -26,25 +25,15 @@ const MainStartScreen = () => {
     { name: 'Needs Repair', population: 40, color: '#FF0000', legendFontColor: '#7F7F7F', legendFontSize: 15 },
   ];
 
-  // Function to handle report generation and sharing
+  // Function to handle report generation by opening the PDF link
   const handleGenerateReport = async () => {
-    try {
-      // Path to the PDF file in the app's document directory
-      const pdfUri = FileSystem.documentDirectory + 'report.pdf';
+    const pdfUrl = 'https://trustscript-rust.vercel.app/report.pdf';
 
-      // Check if the file exists
-      const fileExists = await FileSystem.getInfoAsync(pdfUri);
-      
-      if (fileExists.exists) {
-        // If the file exists, share it
-        await Sharing.shareAsync(pdfUri);
-      } else {
-        // Show an error alert if the file doesn't exist
-        Alert.alert('Error', 'Report file not found. Please make sure the PDF is available.');
-      }
+    try {
+      // Open the PDF link in the browser
+      await WebBrowser.openBrowserAsync(pdfUrl);
     } catch (error) {
-      console.error('Error sharing PDF:', error);
-      Alert.alert('Error', 'Failed to share the report. Please try again.');
+      console.error('Error opening PDF:', error);
     }
   };
 
