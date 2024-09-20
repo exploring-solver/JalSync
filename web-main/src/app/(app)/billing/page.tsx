@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 // import React, { useState, useEffect } from 'react';
@@ -151,33 +152,63 @@ import { Box, Button, TextField, Typography, List, ListItem, ListItemText, IconB
 import { Delete, Download, Payment } from '@mui/icons-material';
 import { jsPDF } from 'jspdf';
 
-const BillingManagementPage = () => {
-  const [bills, setBills] = useState([]);
-  const [panchayats, setPanchayats] = useState({});
-  const [selectedBillId, setSelectedBillId] = useState(null);
-  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const [newBill, setNewBill] = useState({
+interface Bill {
+  _id: string;
+  consumer_name: string;
+  billing_amount: number;
+  due_date: string;
+  payment_status: string;
+  panchayat_id: string;
+}
+
+interface NewBill {
+  consumer_name: string;
+  billing_amount: string;
+  due_date: string;
+  payment_status: string;
+  panchayat_id: string;
+}
+
+interface Panchayats {
+  [key: string]: string;
+}
+
+interface PaymentResponse {
+  orderId: string;
+  razorpayKeyId: string;
+}
+
+interface VerificationResponse {
+  status: number;
+}
+
+const BillingManagementPage: React.FC = () => {
+  const [bills, setBills] = useState<Bill[]>([]);
+  const [panchayats, setPanchayats] = useState<Panchayats>({});
+  const [selectedBillId, setSelectedBillId] = useState<string | null>(null);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false);
+  const [newBill, setNewBill] = useState<NewBill>({
     consumer_name: '',
     billing_amount: '',
     due_date: '',
     payment_status: '',
     panchayat_id: ''
   });
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchBills = async () => {
       try {
-        const billResponse = await axios.get('http://localhost:5000/api/billings/');
+        const billResponse = await axios.get<Bill[]>('http://localhost:5000/api/billings/');
         const fetchedBills = billResponse.data;
         setBills(fetchedBills);
 
         const panchayatIds = [...new Set(fetchedBills.map(bill => bill.panchayat_id))];
         if (panchayatIds.length > 0) {
-          const panchayatRequests = panchayatIds.map(id => axios.get(`http://localhost:5000/api/panchayats/${id}`));
+          const panchayatRequests = panchayatIds.map(id => axios.get<{_id: string; panchayat_name: string}>(`http://localhost:5000/api/panchayats/${id}`));
           const panchayatResponses = await Promise.all(panchayatRequests);
-          const panchayatMap = panchayatResponses.reduce((acc, { data }) => {
+          const panchayatMap = panchayatResponses.reduce<Panchayats>((acc, { data }) => {
             acc[data._id] = data.panchayat_name;
             return acc;
           }, {});
@@ -217,10 +248,10 @@ const BillingManagementPage = () => {
     }
   };
 
-  const handleCreateBill = async (event) => {
+  const handleCreateBill = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/billings/', newBill);
+      const response = await axios.post<Bill>('http://localhost:5000/api/billings/', newBill);
       setBills([...bills, response.data]);
       setSuccess('Bill created successfully');
       setNewBill({
@@ -236,7 +267,7 @@ const BillingManagementPage = () => {
     }
   };
 
-  const downloadInvoice = async (bill) => {
+  const downloadInvoice = async (bill: Bill) => {
     try {
       const doc = new jsPDF();
       doc.text(`Invoice`, 10, 10);
@@ -252,21 +283,21 @@ const BillingManagementPage = () => {
     }
   };
 
-  const handlePayment = async (bill) => {
+  const handlePayment = async (bill: Bill) => {
     try {
-      const paymentResponse = await axios.post('http://localhost:5000/api/payments/', { amount: bill.billing_amount * 100 });
+      const paymentResponse = await axios.post<PaymentResponse>('http://localhost:5000/api/payments/', { amount: bill.billing_amount * 100 });
       const { orderId, razorpayKeyId } = paymentResponse.data;
 
-      const options = {
+      const options: any = {
         key: razorpayKeyId,
         amount: bill.billing_amount * 100,
         currency: 'INR',
         name: 'Your Company Name',
         description: 'Billing Payment',
         order_id: orderId,
-        handler: async (response) => {
+        handler: async (response: any) => {
           try {
-            const verificationResponse = await axios.post('http://localhost:5000/api/verify', {
+            const verificationResponse = await axios.post<VerificationResponse>('http://localhost:5000/api/verify', {
               razorpay_order_id: response.razorpay_order_id,
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_signature: response.razorpay_signature,
@@ -291,14 +322,13 @@ const BillingManagementPage = () => {
         }
       };
 
-      const paymentObject = new window.Razorpay(options);
+      const paymentObject = new (window as any).Razorpay(options);
       paymentObject.open();
     } catch (error) {
       console.error('Error initiating payment:', error);
       setError('Error initiating payment');
     }
   };
-
 
   return (
     <Box p={4} display="flex" className="py-16 min-h-screen my-8">

@@ -12,8 +12,21 @@ import Link from 'next/link';
 import { Menu, X, ChevronDown } from 'lucide-react';
 import axios from 'axios';
 
+// Define types for navigation items
+type NavItem = {
+  name: string;
+  href: string;
+};
+
+type NavCategory = {
+  category: string;
+  items: NavItem[];
+};
+
+type NavItemOrCategory = NavItem | NavCategory;
+
 // Define navigation items with categories
-const navItems = [
+const navItems: NavItemOrCategory[] = [
   {
     category: 'Management',
     items: [
@@ -85,17 +98,17 @@ const Navbar: React.FC = () => {
     setUser(null);
   };
 
-  const NavLink: React.FC<{ item: { name: string; href: string }; onClick?: () => void }> = ({ item, onClick }) => (
+  const NavLink: React.FC<{ item: NavItem; onClick?: () => void }> = ({ item, onClick }) => (
     <Link
       href={item.href}
-      className="px-4 py-2 text-md  font-semibold text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+      className="px-4 py-2 text-md font-semibold text-gray-700 hover:bg-gray-100 hover:text-gray-900"
       onClick={onClick}
     >
       {item.name}
     </Link>
   );
 
-  const NavDropdown: React.FC<{ category: string; items: { name: string; href: string }[] }> = ({ category, items }) => (
+  const NavDropdown: React.FC<{ category: string; items: NavItem[] }> = ({ category, items }) => (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="px-4 py-2 text-md font-semibold">
@@ -112,6 +125,10 @@ const Navbar: React.FC = () => {
     </DropdownMenu>
   );
 
+  const isNavCategory = (item: NavItemOrCategory): item is NavCategory => {
+    return 'category' in item && 'items' in item;
+  };
+
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-white shadow-md' : 'bg-transparent'}`}>
       <div className="container mx-auto px-6 py-4">
@@ -121,8 +138,8 @@ const Navbar: React.FC = () => {
           </Link>
           <div className="hidden md:flex items-center space-x-4">
             {navItems.map((item, index) => (
-              'category' in item ? (
-                <NavDropdown key={index} category={item.category ?? ''} items={item.items ?? []} />
+              isNavCategory(item) ? (
+                <NavDropdown key={index} category={item.category} items={item.items} />
               ) : (
                 <NavLink key={index} item={item} />
               )
@@ -171,7 +188,7 @@ const Navbar: React.FC = () => {
             </div>
             <nav className="flex flex-col space-y-4 p-4">
               {navItems.map((item, index) => (
-                'category' in item ? (
+                isNavCategory(item) ? (
                   <div key={index}>
                     <h3 className="font-semibold text-sm text-gray-500 uppercase tracking-wider mb-2">{item.category}</h3>
                     {item.items.map((subItem) => (
