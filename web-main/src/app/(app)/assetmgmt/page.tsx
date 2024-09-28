@@ -74,6 +74,7 @@ const AssetManagementPage: React.FC = () => {
   });
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [panchayats, setPanchayats] = useState<{ _id: string; panchayat_name: string }[]>([
     { _id: "1", panchayat_name: "Panchayat 1" },
     { _id: "2", panchayat_name: "Panchayat 2" },
