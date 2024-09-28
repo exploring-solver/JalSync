@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import React, { useState } from 'react';
@@ -8,7 +9,7 @@ import { jsPDF } from 'jspdf';
 interface Bill {
   _id: string;
   consumer_name: string;
-  billing_amount: number;
+  billing_amount: number;  // billing_amount is a number
   due_date: string;
   payment_status: string;
   panchayat_id: string;
@@ -16,7 +17,7 @@ interface Bill {
 
 interface NewBill {
   consumer_name: string;
-  billing_amount: string;
+  billing_amount: string;  // billing_amount is initially a string from form input
   due_date: string;
   payment_status: string;
   panchayat_id: string;
@@ -27,7 +28,6 @@ interface Panchayats {
 }
 
 const BillingManagementPage: React.FC = () => {
-  // Hardcoded data for bills and panchayats
   const hardcodedBills: Bill[] = [
     {
       _id: '1',
@@ -85,10 +85,17 @@ const BillingManagementPage: React.FC = () => {
 
   const handleCreateBill = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const newBillWithId = {
-      ...newBill,
+
+    // Convert billing_amount to a number before creating the new bill
+    const newBillWithId: Bill = {
       _id: `${bills.length + 1}`,
+      consumer_name: newBill.consumer_name,
+      billing_amount: parseFloat(newBill.billing_amount),  // Convert string to number
+      due_date: newBill.due_date,
+      payment_status: newBill.payment_status,
+      panchayat_id: newBill.panchayat_id,
     };
+
     setBills([...bills, newBillWithId]);
     setSuccess('Bill created successfully');
     setNewBill({

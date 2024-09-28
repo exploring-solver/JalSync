@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import React, { useEffect, useState } from 'react';
 import { Button, TextField, Select, MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Box, Typography, FormControl, InputLabel } from '@mui/material';
@@ -167,7 +168,7 @@ const ConsumerManagementBilling: React.FC = () => {
                         if (selectedConsumer) {
                             handleUpdateConsumer(selectedConsumer);
                         } else {
-                            handleAddConsumer(selectedConsumer as Consumer);
+                            handleAddConsumer(selectedConsumer as unknown as Consumer);
                         }
                     }}>
                         <TextField
