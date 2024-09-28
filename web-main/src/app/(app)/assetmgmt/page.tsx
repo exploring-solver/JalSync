@@ -41,13 +41,13 @@ const AssetManagementPage: React.FC = () => {
   useEffect(() => {
     const fetchAssets = async () => {
       try {
-        const assetResponse = await axios.get<Asset[]>('http://localhost:5000/api/assets/');
+        const assetResponse = await axios.get<Asset[]>(`${process.env.NEXT_BACKEND_URL}/api/assets/`);
         const fetchedAssets = assetResponse.data;
         setAssets(fetchedAssets);
 
         const panchayatIds = Array.from(new Set(fetchedAssets.map(asset => asset.panchayat_id)));
         if (panchayatIds.length > 0) {
-          const panchayatRequests = panchayatIds.map(id => axios.get(`http://localhost:5000/api/panchayats/${id}`));
+          const panchayatRequests = panchayatIds.map(id => axios.get(`${process.env.NEXT_BACKEND_URL}/api/panchayats/${id}`));
           const panchayatResponses = await Promise.all(panchayatRequests);
           const panchayatMap = panchayatResponses.reduce((acc: { [id: string]: string }, { data }) => {
             acc[data._id] = data.name;
@@ -66,7 +66,7 @@ const AssetManagementPage: React.FC = () => {
   const handleDelete = async () => {
     if (selectedAssetId) {
       try {
-        await axios.delete(`http://localhost:5000/api/assets/${selectedAssetId}`);
+        await axios.delete(`${process.env.NEXT_BACKEND_URL}/api/assets/${selectedAssetId}`);
         setAssets(assets.filter(asset => asset._id !== selectedAssetId));
         setSuccess('Asset deleted successfully');
       } catch (error) {
@@ -81,7 +81,7 @@ const AssetManagementPage: React.FC = () => {
   const handleCreateAsset = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
-      const response = await axios.post<Asset>('http://localhost:5000/api/assets/', newAsset);
+      const response = await axios.post<Asset>(`${process.env.NEXT_BACKEND_URL}/api/assets/`, newAsset);
       setAssets([...assets, response.data]);
       setSuccess('Asset created successfully');
       setNewAsset({

@@ -21,7 +21,7 @@ const RegisterPage: React.FC = () => {
     setError(null);
 
     try {
-      const response = await axios.post('http://localhost:5000/api/users/register', {
+      const response = await axios.post(`${process.env.NEXT_BACKEND_URL}/api/users/register`, {
         email,
         password,
         name,

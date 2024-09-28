@@ -55,14 +55,14 @@ const ConsumableManagementPage: React.FC = () => {
   useEffect(() => {
     const fetchConsumables = async () => {
       try {
-        const consumableResponse = await axios.get<Consumable[]>('http://localhost:5000/api/consumables/');
+        const consumableResponse = await axios.get<Consumable[]>(`${process.env.NEXT_BACKEND_URL}/api/consumables/`);
         const fetchedConsumables = consumableResponse.data;
         setConsumables(fetchedConsumables);
 
         // Fetch panchayat names
         const panchayatIds = [...new Set(fetchedConsumables.map(consumable => consumable.panchayat_id))];
         if (panchayatIds.length > 0) {
-          const panchayatRequests = panchayatIds.map(id => axios.get<Panchayat>(`http://localhost:5000/api/panchayats/${id}`));
+          const panchayatRequests = panchayatIds.map(id => axios.get<Panchayat>(`${process.env.NEXT_BACKEND_URL}/api/panchayats/${id}`));
           const panchayatResponses = await Promise.all(panchayatRequests);
           const panchayatMap = panchayatResponses.reduce((acc, { data }) => {
             acc[data._id] = data.name;
@@ -81,7 +81,7 @@ const ConsumableManagementPage: React.FC = () => {
   const handleDelete = async () => {
     if (selectedConsumableId) {
       try {
-        await axios.delete(`http://localhost:5000/api/consumables/${selectedConsumableId}`);
+        await axios.delete(`${process.env.NEXT_BACKEND_URL}/api/consumables/${selectedConsumableId}`);
         setConsumables(consumables.filter(consumable => consumable._id !== selectedConsumableId));
         setSuccess('Consumable deleted successfully');
       } catch (error) {
@@ -96,7 +96,7 @@ const ConsumableManagementPage: React.FC = () => {
   const handleCreateConsumable = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
-      const response = await axios.post<Consumable>('http://localhost:5000/api/consumables/', newConsumable);
+      const response = await axios.post<Consumable>(`${process.env.NEXT_BACKEND_URL}/api/consumables/`, newConsumable);
       setConsumables([...consumables, response.data]);
       setSuccess('Consumable created successfully');
       setNewConsumable({
