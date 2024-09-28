@@ -13,23 +13,47 @@ interface Transaction {
 }
 
 const FinancialManagement: React.FC = () => {
-    const [transactions, setTransactions] = useState<Transaction[]>([]);
+    // Hardcoded transaction data
+    const hardcodedTransactions: Transaction[] = [
+        {
+            id: '1',
+            type: 'income',
+            amount: 5000,
+            date: '2024-09-15',
+            source: 'Government Grant',
+            purpose: '',
+        },
+        {
+            id: '2',
+            type: 'expense',
+            amount: 1500,
+            date: '2024-09-20',
+            source: '',
+            purpose: 'Road Maintenance',
+        },
+        {
+            id: '3',
+            type: 'income',
+            amount: 3000,
+            date: '2024-09-25',
+            source: 'Community Donation',
+            purpose: '',
+        },
+        {
+            id: '4',
+            type: 'expense',
+            amount: 2000,
+            date: '2024-09-28',
+            source: '',
+            purpose: 'School Supplies',
+        },
+    ];
+
+    const [transactions, setTransactions] = useState<Transaction[]>(hardcodedTransactions);
     const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
     const [financialSummary, setFinancialSummary] = useState({ income: 0, expense: 0, balance: 0 });
 
-    const handleAddTransaction = (newTransaction: Transaction) => {
-        setTransactions([...transactions, newTransaction]);
-        updateFinancialSummary([...transactions, newTransaction]);
-    };
-
-    const handleUpdateTransaction = (updatedTransaction: Transaction) => {
-        const updatedTransactions = transactions.map(transaction =>
-            transaction.id === updatedTransaction.id ? updatedTransaction : transaction
-        );
-        setTransactions(updatedTransactions);
-        updateFinancialSummary(updatedTransactions);
-    };
-
+    // Function to update financial summary based on the transactions
     const updateFinancialSummary = (transactionList: Transaction[]) => {
         const summary = transactionList.reduce((acc, transaction) => {
             if (transaction.type === 'income') {
@@ -44,10 +68,29 @@ const FinancialManagement: React.FC = () => {
         setFinancialSummary(summary);
     };
 
+    // Initialize the financial summary with the hardcoded data
+    React.useEffect(() => {
+        updateFinancialSummary(hardcodedTransactions);
+    }, []);
+
+    const handleAddTransaction = (newTransaction: Transaction) => {
+        const updatedTransactions = [...transactions, newTransaction];
+        setTransactions(updatedTransactions);
+        updateFinancialSummary(updatedTransactions);
+    };
+
+    const handleUpdateTransaction = (updatedTransaction: Transaction) => {
+        const updatedTransactions = transactions.map(transaction =>
+            transaction.id === updatedTransaction.id ? updatedTransaction : transaction
+        );
+        setTransactions(updatedTransactions);
+        updateFinancialSummary(updatedTransactions);
+    };
+
     return (
         <Box sx={{ p: 4, minHeight: '100vh', py: 16, mt: 10, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <Box sx={{ maxWidth: 'md', width: '100%' }}>
-                <Typography variant="h4" sx={{ mb: 4 , fontWeight: 'bold'}} >Financial Management for Gram Panchayat</Typography>
+                <Typography variant="h4" sx={{ mb: 4, fontWeight: 'bold' }}>Financial Management for Gram Panchayat</Typography>
 
                 <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 4 }}>
                     <Box>
@@ -67,7 +110,7 @@ const FinancialManagement: React.FC = () => {
                                         <TableRow key={transaction.id} onClick={() => setSelectedTransaction(transaction)}>
                                             <TableCell>{transaction.id}</TableCell>
                                             <TableCell>{transaction.type}</TableCell>
-                                            <TableCell>{transaction.amount}</TableCell>
+                                            <TableCell>₹{transaction.amount.toFixed(2)}</TableCell>
                                             <TableCell>{transaction.date}</TableCell>
                                         </TableRow>
                                     ))}

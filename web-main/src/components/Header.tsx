@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import Link from 'next/link';
 import { Menu, X, ChevronDown } from 'lucide-react';
-import axios from 'axios';
+import { useAuth } from '@/Context/AuthContext'; // Import the Auth context
 
 // Define types for navigation items
 type NavItem = {
@@ -56,7 +56,7 @@ const navItems: NavItemOrCategory[] = [
 const Navbar: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
-  const [user, setUser] = useState<string | null>(null);
+  const { user, loading, logout } = useAuth(); // Use the Auth context
 
   useEffect(() => {
     const handleScroll = () => {
@@ -64,25 +64,6 @@ const Navbar: React.FC = () => {
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  useEffect(() => {
-    const fetchUserProfile = async () => {
-      const token = localStorage.getItem('accessToken');
-      if (token) {
-        try {
-          const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/profile`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          setUser(response.data.name);
-        } catch (error) {
-          console.error('Error fetching user profile:', error);
-        }
-      }
-    };
-    fetchUserProfile();
   }, []);
 
   const toggleSidebar = (): void => {
@@ -93,20 +74,18 @@ const Navbar: React.FC = () => {
     setIsSidebarOpen(false);
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('accessToken');
-    setUser(null);
-  };
-
   const NavLink: React.FC<{ item: NavItem; onClick?: () => void }> = ({ item, onClick }) => (
     <Link
       href={item.href}
-      className="px-4 py-2 text-md font-semibold text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+      className="px-4 py-2 text-md font-semibold text-gray-700 hover:bg-gray-100 hover:text-gray-900 w-full"
       onClick={onClick}
     >
       {item.name}
     </Link>
   );
+  const handleReload = () => {
+    window.location.reload();
+  };
 
   const NavDropdown: React.FC<{ category: string; items: NavItem[] }> = ({ category, items }) => (
     <DropdownMenu>
@@ -144,23 +123,29 @@ const Navbar: React.FC = () => {
                 <NavLink key={index} item={item} />
               )
             ))}
-            {!user ? (
-              <>
-                <Link href="/login" className="px-4 py-2 rounded-lg bg-blue-700 text-white hover:bg-blue-800 transition-colors duration-300">
-                  Login
-                </Link>
-                <Link href="/register" className="px-4 py-2 rounded-lg bg-blue-700 text-white hover:bg-blue-800 transition-colors duration-300">
-                  Register
-                </Link>
-              </>
-            ) : (
+            {/* Conditionally Render Based on Loading and User State */}
+            {loading ? (
+              <span>Loading...</span>
+            ) : user ? (
               <>
                 <Link href="/profile" className="px-4 py-2 rounded-lg bg-green-700 text-white hover:bg-green-800 transition-colors duration-300">
                   {user}
                 </Link>
-                <Button onClick={handleLogout} className="px-4 py-2 rounded-lg bg-red-700 text-white hover:bg-red-800">
+                <Button onClick={logout} className="px-4 py-2 rounded-lg bg-red-700 text-white hover:bg-red-800">
                   Logout
                 </Button>
+              </>
+            ) : (
+              <>
+                <Link href="/login" className="px-4 py-2 rounded-lg bg-blue-700 text-white hover:bg-blue-800 transition-colors duration-300">
+                  Login
+                </Link>
+                <Button className="px-4 py-2 rounded-lg bg-blue-700 text-white hover:bg-blue-800 transition-colors duration-300" onClick={handleReload}>
+                  Reload
+                </Button>
+                <Link href="/register" className="px-4 py-2 rounded-lg bg-blue-700 text-white hover:bg-blue-800 transition-colors duration-300">
+                  Register
+                </Link>
               </>
             )}
           </div>
@@ -203,26 +188,26 @@ const Navbar: React.FC = () => {
                   <NavLink key={index} item={item} onClick={closeSidebar} />
                 )
               ))}
-              {!user ? (
+              {/* Conditionally Render User Section in Sidebar */}
+              {loading ? (
+                <span>Loading...</span>
+              ) : user ? (
                 <>
-                  <Link href="https://github.com/exploring-solver/JalSync/raw/refs/heads/main/web-main/public/jalsync-app-release-team-ramanujan.apk" className="px-4 py-2 rounded-lg bg-blue-700 text-white hover:bg-blue-800 transition-colors duration-300">
-                    Download App
+                  <Link href="/profile" className="px-4 py-2 rounded-lg bg-green-700 text-white hover:bg-green-800 transition-colors duration-300">
+                    {user}
                   </Link>
+                  <Button onClick={logout} className="px-4 py-2 rounded-lg bg-red-700 text-white hover:bg-red-800">
+                    Logout
+                  </Button>
+                </>
+              ) : (
+                <>
                   <Link href="/login" className="px-4 py-2 rounded-lg bg-blue-700 text-white hover:bg-blue-800 transition-colors duration-300">
                     Login
                   </Link>
                   <Link href="/register" className="px-4 py-2 rounded-lg bg-blue-700 text-white hover:bg-blue-800 transition-colors duration-300">
                     Register
                   </Link>
-                </>
-              ) : (
-                <>
-                  <Link href="/profile" className="px-4 py-2 rounded-lg bg-green-700 text-white hover:bg-green-800 transition-colors duration-300">
-                    {user}
-                  </Link>
-                  <Button onClick={handleLogout} className="px-4 py-2 rounded-lg bg-red-700 text-white hover:bg-red-800">
-                    Logout
-                  </Button>
                 </>
               )}
             </nav>

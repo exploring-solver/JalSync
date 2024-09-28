@@ -1,153 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-// import React, { useState, useEffect } from 'react';
-// import axios from 'axios';
-// import { Box, Button, TextField, Typography, List, ListItem, ListItemText, IconButton, Dialog, DialogActions, DialogContent, DialogTitle, Alert } from '@mui/material';
-// import { Delete, Download, Payment } from '@mui/icons-material';
-// import { jsPDF } from 'jspdf';
-// import useRazorpay from 'react-razorpay';
-
-// const BillingManagementPage = () => {
-//   const [bills, setBills] = useState([]);
-//   const [panchayats, setPanchayats] = useState({});
-//   const [selectedBillId, setSelectedBillId] = useState(null);
-//   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-//   const [newBill, setNewBill] = useState({
-//     consumer_name: '',
-//     billing_amount: '',
-//     due_date: '',
-//     payment_status: '',
-//     panchayat_id: ''
-//   });
-//   const [error, setError] = useState(null);
-//   const [success, setSuccess] = useState(null);
-//   const Razorpay = useRazorpay();
-
-//   useEffect(() => {
-//     const fetchBills = async () => {
-//       try {
-//         const billResponse = await axios.get('${process.env.NEXT_PUBLIC_BACKEND_URL}/api/billings/');
-//         const fetchedBills = billResponse.data;
-//         setBills(fetchedBills);
-
-//         const panchayatIds = [...new Set(fetchedBills.map(bill => bill.panchayat_id))];
-//         if (panchayatIds.length > 0) {
-//           const panchayatRequests = panchayatIds.map(id => axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/panchayats/${id}`));
-//           const panchayatResponses = await Promise.all(panchayatRequests);
-//           const panchayatMap = panchayatResponses.reduce((acc, { data }) => {
-//             acc[data._id] = data.panchayat_name;
-//             return acc;
-//           }, {});
-//           setPanchayats(panchayatMap);
-//         }
-//       } catch (error) {
-//         console.error('Error fetching bills or panchayats:', error);
-//         setError('Error fetching bills or panchayats');
-//       }
-//     };
-
-//     fetchBills();
-//   }, []);
-
-//   const handleDelete = async () => {
-//     if (selectedBillId) {
-//       try {
-//         await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/billings/${selectedBillId}`);
-//         setBills(bills.filter(bill => bill._id !== selectedBillId));
-//         setSuccess('Bill deleted successfully');
-//       } catch (error) {
-//         setError('Error deleting bill');
-//         console.error('Error deleting bill:', error);
-//       }
-//       setOpenDeleteDialog(false);
-//       setSelectedBillId(null);
-//     }
-//   };
-
-//   const handleCreateBill = async (event) => {
-//     event.preventDefault();
-//     try {
-//       const response = await axios.post('${process.env.NEXT_PUBLIC_BACKEND_URL}/api/billings/', newBill);
-//       setBills([...bills, response.data]);
-//       setSuccess('Bill created successfully');
-//       setNewBill({
-//         consumer_name: '',
-//         billing_amount: '',
-//         due_date: '',
-//         payment_status: '',
-//         panchayat_id: ''
-//       });
-//     } catch (error) {
-//       setError('Error creating bill');
-//       console.error('Error creating bill:', error);
-//     }
-//   };
-
-//   const downloadInvoice = async (bill) => {
-//     try {
-//       const doc = new jsPDF();
-//       doc.text(`Invoice`, 10, 10);
-//       doc.text(`Consumer Name: ${bill.consumer_name}`, 10, 20);
-//       doc.text(`Billing Amount: ₹${bill.billing_amount}`, 10, 30);
-//       doc.text(`Due Date: ${new Date(bill.due_date).toLocaleDateString()}`, 10, 40);
-//       doc.text(`Payment Status: ${bill.payment_status}`, 10, 50);
-//       doc.text(`Panchayat: ${panchayats[bill.panchayat_id] || 'Unknown'}`, 10, 60);
-//       doc.save(`invoice_${bill._id}.pdf`);
-//     } catch (error) {
-//       console.error('Error generating invoice:', error);
-//       setError('Error generating invoice');
-//     }
-//   };
-
-//   const handlePayment = async (bill) => {
-//     try {
-//       const paymentResponse = await axios.post('${process.env.NEXT_PUBLIC_BACKEND_URL}/api/payments/', { amount: bill.billing_amount * 100 });
-//       const { orderId, razorpayKeyId } = paymentResponse.data;
-
-//       const options = {
-//         key: razorpayKeyId,
-//         amount: bill.billing_amount * 100,
-//         currency: 'INR',
-//         name: 'Your Company Name',
-//         description: 'Billing Payment',
-//         order_id: orderId,
-//         handler: async (response) => {
-//           try {
-//             const verificationResponse = await axios.post('${process.env.NEXT_PUBLIC_BACKEND_URL}/api/verify', {
-//               razorpay_order_id: response.razorpay_order_id,
-//               razorpay_payment_id: response.razorpay_payment_id,
-//               razorpay_signature: response.razorpay_signature,
-//             });
-
-//             if (verificationResponse.status === 200) {
-//               setSuccess('Payment Successful');
-//               // Update the bill status or refetch bills here
-//             }
-//           } catch (error) {
-//             console.error('Error verifying payment:', error);
-//             setError('Error verifying payment');
-//           }
-//         },
-//         prefill: {
-//           name: bill.consumer_name,
-//           email: '',
-//           contact: '',
-//         },
-//         theme: {
-//           color: '#F37254'
-//         }
-//       };
-
-//       const razorpay = new Razorpay(options);
-//       razorpay.open();
-//     } catch (error) {
-//       console.error('Error initiating payment:', error);
-//       setError('Error initiating payment');
-//     }
-//   };
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState } from 'react';
 import { Box, Button, TextField, Typography, List, ListItem, ListItemText, IconButton, Dialog, DialogActions, DialogContent, DialogTitle, Alert } from '@mui/material';
 import { Delete, Download, Payment } from '@mui/icons-material';
 import { jsPDF } from 'jspdf';
@@ -173,18 +26,42 @@ interface Panchayats {
   [key: string]: string;
 }
 
-interface PaymentResponse {
-  orderId: string;
-  razorpayKeyId: string;
-}
-
-interface VerificationResponse {
-  status: number;
-}
-
 const BillingManagementPage: React.FC = () => {
-  const [bills, setBills] = useState<Bill[]>([]);
-  const [panchayats, setPanchayats] = useState<Panchayats>({});
+  // Hardcoded data for bills and panchayats
+  const hardcodedBills: Bill[] = [
+    {
+      _id: '1',
+      consumer_name: 'John Doe',
+      billing_amount: 1500,
+      due_date: '2024-10-15',
+      payment_status: 'Paid',
+      panchayat_id: 'p1',
+    },
+    {
+      _id: '2',
+      consumer_name: 'Jane Smith',
+      billing_amount: 3000,
+      due_date: '2024-10-25',
+      payment_status: 'Unpaid',
+      panchayat_id: 'p2',
+    },
+    {
+      _id: '3',
+      consumer_name: 'Bob Johnson',
+      billing_amount: 2200,
+      due_date: '2024-10-18',
+      payment_status: 'Overdue',
+      panchayat_id: 'p1',
+    },
+  ];
+
+  const hardcodedPanchayats: Panchayats = {
+    p1: 'Panchayat A',
+    p2: 'Panchayat B',
+  };
+
+  const [bills, setBills] = useState<Bill[]>(hardcodedBills);
+  const [panchayats, setPanchayats] = useState<Panchayats>(hardcodedPanchayats);
   const [selectedBillId, setSelectedBillId] = useState<string | null>(null);
   const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false);
   const [newBill, setNewBill] = useState<NewBill>({
@@ -192,82 +69,38 @@ const BillingManagementPage: React.FC = () => {
     billing_amount: '',
     due_date: '',
     payment_status: '',
-    panchayat_id: ''
+    panchayat_id: '',
   });
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchBills = async () => {
-      try {
-        const billResponse = await axios.get<Bill[]>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/billings/`);
-        const fetchedBills = billResponse.data;
-        setBills(fetchedBills);
-
-        const panchayatIds = [...new Set(fetchedBills.map(bill => bill.panchayat_id))];
-        if (panchayatIds.length > 0) {
-          const panchayatRequests = panchayatIds.map(id => axios.get<{_id: string; panchayat_name: string}>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/panchayats/${id}`));
-          const panchayatResponses = await Promise.all(panchayatRequests);
-          const panchayatMap = panchayatResponses.reduce<Panchayats>((acc, { data }) => {
-            acc[data._id] = data.panchayat_name;
-            return acc;
-          }, {});
-          setPanchayats(panchayatMap);
-        }
-      } catch (error) {
-        console.error('Error fetching bills or panchayats:', error);
-        setError('Error fetching bills or panchayats');
-      }
-    };
-
-    fetchBills();
-
-    // Load Razorpay script
-    const script = document.createElement('script');
-    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
-    script.async = true;
-    document.body.appendChild(script);
-
-    return () => {
-      document.body.removeChild(script);
-    };
-  }, []);
-
-  const handleDelete = async () => {
+  const handleDelete = () => {
     if (selectedBillId) {
-      try {
-        await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/billings/${selectedBillId}`);
-        setBills(bills.filter(bill => bill._id !== selectedBillId));
-        setSuccess('Bill deleted successfully');
-      } catch (error) {
-        setError('Error deleting bill');
-        console.error('Error deleting bill:', error);
-      }
+      setBills(bills.filter(bill => bill._id !== selectedBillId));
+      setSuccess('Bill deleted successfully');
       setOpenDeleteDialog(false);
       setSelectedBillId(null);
     }
   };
 
-  const handleCreateBill = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleCreateBill = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    try {
-      const response = await axios.post<Bill>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/billings/`, newBill);
-      setBills([...bills, response.data]);
-      setSuccess('Bill created successfully');
-      setNewBill({
-        consumer_name: '',
-        billing_amount: '',
-        due_date: '',
-        payment_status: '',
-        panchayat_id: ''
-      });
-    } catch (error) {
-      setError('Error creating bill');
-      console.error('Error creating bill:', error);
-    }
+    const newBillWithId = {
+      ...newBill,
+      _id: `${bills.length + 1}`,
+    };
+    setBills([...bills, newBillWithId]);
+    setSuccess('Bill created successfully');
+    setNewBill({
+      consumer_name: '',
+      billing_amount: '',
+      due_date: '',
+      payment_status: '',
+      panchayat_id: '',
+    });
   };
 
-  const downloadInvoice = async (bill: Bill) => {
+  const downloadInvoice = (bill: Bill) => {
     try {
       const doc = new jsPDF();
       doc.text(`Invoice`, 10, 10);
@@ -283,51 +116,10 @@ const BillingManagementPage: React.FC = () => {
     }
   };
 
-  const handlePayment = async (bill: Bill) => {
-    try {
-      const paymentResponse = await axios.post<PaymentResponse>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/payments/`, { amount: bill.billing_amount * 100 });
-      const { orderId, razorpayKeyId } = paymentResponse.data;
-
-      const options: any = {
-        key: razorpayKeyId,
-        amount: bill.billing_amount * 100,
-        currency: 'INR',
-        name: 'Your Company Name',
-        description: 'Billing Payment',
-        order_id: orderId,
-        handler: async (response: any) => {
-          try {
-            const verificationResponse = await axios.post<VerificationResponse>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/verify`, {
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_signature: response.razorpay_signature,
-            });
-
-            if (verificationResponse.status === 200) {
-              setSuccess('Payment Successful');
-              // Update the bill status or refetch bills here
-            }
-          } catch (error) {
-            console.error('Error verifying payment:', error);
-            setError('Error verifying payment');
-          }
-        },
-        prefill: {
-          name: bill.consumer_name,
-          email: '',
-          contact: '',
-        },
-        theme: {
-          color: '#F37254'
-        }
-      };
-
-      const paymentObject = new (window as any).Razorpay(options);
-      paymentObject.open();
-    } catch (error) {
-      console.error('Error initiating payment:', error);
-      setError('Error initiating payment');
-    }
+  const handlePayment = (bill: Bill) => {
+    alert(`Payment processing for ${bill.consumer_name}`);
+    // This is a placeholder to show how payment functionality could be triggered
+    // Replace this with real payment integration logic
   };
 
   return (

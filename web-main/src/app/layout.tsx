@@ -3,11 +3,11 @@ import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import "./globals.css";
-import "@/olaSDK/style.css"
-import { Inter } from 'next/font/google'
- 
-const inter = Inter({ subsets: ['latin'] })
+import "@/olaSDK/style.css";
+import { Inter } from 'next/font/google';
+import { AuthProvider } from "@/Context/AuthContext";
 
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: "JalSync",
@@ -21,15 +21,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={inter.className}>
-      
       <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-      <body
-        className={''}
-      >
-
-        <Header />
-        {children}
-        <Footer />
+      <body>
+        <AuthProvider> {/* Wrap your app with AuthProvider */}
+          <Header />
+          {children}
+          <Footer />
+        </AuthProvider>
       </body>
     </html>
   );

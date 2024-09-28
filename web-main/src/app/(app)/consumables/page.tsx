@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import {
   Box,
   Button,
@@ -34,88 +33,93 @@ interface Panchayat {
 }
 
 const ConsumableManagementPage: React.FC = () => {
-  const [consumables, setConsumables] = useState<Consumable[]>([]);
+  // Hardcoded dummy data for consumables and panchayats
+  const dummyConsumables: Consumable[] = [
+    {
+      _id: '1',
+      item_name: 'Water Purification Tablets',
+      current_quantity: 120,
+      minimum_threshold: 50,
+      replenishment_due_date: '2024-12-01',
+      panchayat_id: 'p1',
+    },
+    {
+      _id: '2',
+      item_name: 'First Aid Kits',
+      current_quantity: 20,
+      minimum_threshold: 10,
+      replenishment_due_date: '2024-11-15',
+      panchayat_id: 'p2',
+    },
+    {
+      _id: '3',
+      item_name: 'Sanitation Kits',
+      current_quantity: 60,
+      minimum_threshold: 30,
+      replenishment_due_date: '2024-10-30',
+      panchayat_id: 'p1',
+    },
+  ];
+
+  const dummyPanchayats: { [id: string]: string } = {
+    p1: 'Panchayat A',
+    p2: 'Panchayat B',
+  };
+
+  // State Initialization
+  const [consumables, setConsumables] = useState<Consumable[]>(dummyConsumables);
   const [selectedConsumableId, setSelectedConsumableId] = useState<string | null>(null);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  
+
   const [newConsumable, setNewConsumable] = useState<Consumable>({
-    _id: '', // This may not be needed if it's auto-generated on the server
+    _id: '',
     item_name: '',
     current_quantity: 0,
     minimum_threshold: 0,
     replenishment_due_date: '',
     panchayat_id: ''
   });
-  
+
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  
-  const [panchayats, setPanchayats] = useState<{ [id: string]: string }>({});
+  const [panchayats, setPanchayats] = useState<{ [id: string]: string }>(dummyPanchayats);
 
   useEffect(() => {
-    const fetchConsumables = async () => {
-      try {
-        const consumableResponse = await axios.get<Consumable[]>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/consumables/`);
-        const fetchedConsumables = consumableResponse.data;
-        setConsumables(fetchedConsumables);
-
-        // Fetch panchayat names
-        const panchayatIds = [...new Set(fetchedConsumables.map(consumable => consumable.panchayat_id))];
-        if (panchayatIds.length > 0) {
-          const panchayatRequests = panchayatIds.map(id => axios.get<Panchayat>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/panchayats/${id}`));
-          const panchayatResponses = await Promise.all(panchayatRequests);
-          const panchayatMap = panchayatResponses.reduce((acc, { data }) => {
-            acc[data._id] = data.name;
-            return acc;
-          }, {} as { [id: string]: string });
-          setPanchayats(panchayatMap);
-        }
-      } catch (error) {
-        console.error('Error fetching consumables or panchayats:', error);
-      }
-    };
-
-    fetchConsumables();
+    // Here we already have the hardcoded data, so no need to fetch from the backend.
+    setConsumables(dummyConsumables);
+    setPanchayats(dummyPanchayats);
   }, []);
 
-  const handleDelete = async () => {
+  const handleDelete = () => {
     if (selectedConsumableId) {
-      try {
-        await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/consumables/${selectedConsumableId}`);
-        setConsumables(consumables.filter(consumable => consumable._id !== selectedConsumableId));
-        setSuccess('Consumable deleted successfully');
-      } catch (error) {
-        setError('Error deleting consumable');
-        console.error('Error deleting consumable:', error);
-      }
+      setConsumables(consumables.filter(consumable => consumable._id !== selectedConsumableId));
+      setSuccess('Consumable deleted successfully');
       setOpenDeleteDialog(false);
       setSelectedConsumableId(null);
     }
   };
 
-  const handleCreateConsumable = async (event: React.FormEvent) => {
+  const handleCreateConsumable = (event: React.FormEvent) => {
     event.preventDefault();
-    try {
-      const response = await axios.post<Consumable>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/consumables/`, newConsumable);
-      setConsumables([...consumables, response.data]);
-      setSuccess('Consumable created successfully');
-      setNewConsumable({
-        _id: '',
-        item_name: '',
-        current_quantity: 0,
-        minimum_threshold: 0,
-        replenishment_due_date: '',
-        panchayat_id: ''
-      });
-    } catch (error) {
-      setError('Error creating consumable');
-      console.error('Error creating consumable:', error);
-    }
+    const newConsumableWithId = {
+      ...newConsumable,
+      _id: (consumables.length + 1).toString(), // Auto-generate a new ID
+    };
+    setConsumables([...consumables, newConsumableWithId]);
+    setSuccess('Consumable created successfully');
+    setNewConsumable({
+      _id: '',
+      item_name: '',
+      current_quantity: 0,
+      minimum_threshold: 0,
+      replenishment_due_date: '',
+      panchayat_id: ''
+    });
   };
 
   return (
     <Box p={4} display="flex" flexDirection="column" alignItems="center" className="min-h-screen py-20 px-10">
-      <Typography variant="h4" gutterBottom className='font-semibold text-center'>
+      <Typography variant="h4" gutterBottom className="font-semibold text-center">
         Consumable Management
       </Typography>
 
@@ -123,7 +127,7 @@ const ConsumableManagementPage: React.FC = () => {
       {success && <Alert severity="success" sx={{ width: '100%', mb: 2 }}>{success}</Alert>}
 
       <Box mb={4}>
-        <Typography variant="h6" gutterBottom className='font-semibold text-left'>Add New Consumable</Typography>
+        <Typography variant="h6" gutterBottom className="font-semibold text-left">Add New Consumable</Typography>
         <form onSubmit={handleCreateConsumable}>
           <TextField
             label="Item Name"
@@ -159,6 +163,7 @@ const ConsumableManagementPage: React.FC = () => {
             value={newConsumable.replenishment_due_date}
             onChange={(e) => setNewConsumable({ ...newConsumable, replenishment_due_date: e.target.value })}
             required
+            InputLabelProps={{ shrink: true }}
           />
           <TextField
             label="Panchayat ID"
@@ -174,15 +179,15 @@ const ConsumableManagementPage: React.FC = () => {
         </form>
       </Box>
 
-      <Typography variant="h6" gutterBottom className='font-semibold'>Consumables List</Typography>
+      <Typography variant="h6" gutterBottom className="font-semibold">Consumables List</Typography>
       <List sx={{ width: '100%', maxWidth: '600px', bgcolor: 'background.paper' }}>
         {consumables.map((consumable) => (
           <ListItem
             key={consumable._id}
             secondaryAction={
-              <IconButton edge="end" aria-label="delete" onClick={() => { 
-                setSelectedConsumableId(consumable._id); 
-                setOpenDeleteDialog(true); 
+              <IconButton edge="end" aria-label="delete" onClick={() => {
+                setSelectedConsumableId(consumable._id);
+                setOpenDeleteDialog(true);
               }}>
                 <Delete />
               </IconButton>
