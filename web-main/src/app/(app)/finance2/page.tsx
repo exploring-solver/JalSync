@@ -47,7 +47,7 @@ const FinancialManagement: React.FC = () => {
     return (
         <Box sx={{ p: 4, minHeight: '100vh', py: 16, mt: 10, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <Box sx={{ maxWidth: 'md', width: '100%' }}>
-                <Typography variant="h4" sx={{ mb: 4 }}>Financial Management for Gram Panchayat</Typography>
+                <Typography variant="h4" sx={{ mb: 4 , fontWeight: 'bold'}} >Financial Management for Gram Panchayat</Typography>
 
                 <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 4 }}>
                     <Box>

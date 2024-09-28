@@ -9,7 +9,7 @@ const teamMembers = [
     }
   },
     {
-      name: "Aman",
+      name: "Aman Sharma",
       role: " Full Stack Developer",
       image: "https://avatars.githubusercontent.com/exploring-solver",
       social: {

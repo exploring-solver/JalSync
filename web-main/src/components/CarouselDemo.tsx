@@ -1,13 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, ReactNode } from "react";
 import Image from "next/image";
 import { IconArrowNarrowLeft, IconArrowNarrowRight } from "@tabler/icons-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 
 interface CarouselProps {
-  items: { src: string; title: string }[];
+  items: {
+    description: ReactNode; src: string; title: string 
+}[];
 }
 
 export const Carousel = ({ items }: CarouselProps) => {
