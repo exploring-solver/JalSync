@@ -31,7 +31,7 @@ const Profile: React.FC = () => {
           headers: { Authorization: `Bearer ${token}` },
         };
 
-        const { data } = await axios.get<UserProfile>(`${process.env.NEXT_BACKEND_URL}/api/users/profile`, config);
+        const { data } = await axios.get<UserProfile>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/profile`, config);
         setProfile(data);
         setLoading(false);
       } catch (err) {

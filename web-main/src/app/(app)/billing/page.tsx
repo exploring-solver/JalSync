@@ -27,13 +27,13 @@
 //   useEffect(() => {
 //     const fetchBills = async () => {
 //       try {
-//         const billResponse = await axios.get('${process.env.NEXT_BACKEND_URL}/api/billings/');
+//         const billResponse = await axios.get('${process.env.NEXT_PUBLIC_BACKEND_URL}/api/billings/');
 //         const fetchedBills = billResponse.data;
 //         setBills(fetchedBills);
 
 //         const panchayatIds = [...new Set(fetchedBills.map(bill => bill.panchayat_id))];
 //         if (panchayatIds.length > 0) {
-//           const panchayatRequests = panchayatIds.map(id => axios.get(`${process.env.NEXT_BACKEND_URL}/api/panchayats/${id}`));
+//           const panchayatRequests = panchayatIds.map(id => axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/panchayats/${id}`));
 //           const panchayatResponses = await Promise.all(panchayatRequests);
 //           const panchayatMap = panchayatResponses.reduce((acc, { data }) => {
 //             acc[data._id] = data.panchayat_name;
@@ -53,7 +53,7 @@
 //   const handleDelete = async () => {
 //     if (selectedBillId) {
 //       try {
-//         await axios.delete(`${process.env.NEXT_BACKEND_URL}/api/billings/${selectedBillId}`);
+//         await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/billings/${selectedBillId}`);
 //         setBills(bills.filter(bill => bill._id !== selectedBillId));
 //         setSuccess('Bill deleted successfully');
 //       } catch (error) {
@@ -68,7 +68,7 @@
 //   const handleCreateBill = async (event) => {
 //     event.preventDefault();
 //     try {
-//       const response = await axios.post('${process.env.NEXT_BACKEND_URL}/api/billings/', newBill);
+//       const response = await axios.post('${process.env.NEXT_PUBLIC_BACKEND_URL}/api/billings/', newBill);
 //       setBills([...bills, response.data]);
 //       setSuccess('Bill created successfully');
 //       setNewBill({
@@ -102,7 +102,7 @@
 
 //   const handlePayment = async (bill) => {
 //     try {
-//       const paymentResponse = await axios.post('${process.env.NEXT_BACKEND_URL}/api/payments/', { amount: bill.billing_amount * 100 });
+//       const paymentResponse = await axios.post('${process.env.NEXT_PUBLIC_BACKEND_URL}/api/payments/', { amount: bill.billing_amount * 100 });
 //       const { orderId, razorpayKeyId } = paymentResponse.data;
 
 //       const options = {
@@ -114,7 +114,7 @@
 //         order_id: orderId,
 //         handler: async (response) => {
 //           try {
-//             const verificationResponse = await axios.post('${process.env.NEXT_BACKEND_URL}/api/verify', {
+//             const verificationResponse = await axios.post('${process.env.NEXT_PUBLIC_BACKEND_URL}/api/verify', {
 //               razorpay_order_id: response.razorpay_order_id,
 //               razorpay_payment_id: response.razorpay_payment_id,
 //               razorpay_signature: response.razorpay_signature,
@@ -200,13 +200,13 @@ const BillingManagementPage: React.FC = () => {
   useEffect(() => {
     const fetchBills = async () => {
       try {
-        const billResponse = await axios.get<Bill[]>(`${process.env.NEXT_BACKEND_URL}/api/billings/`);
+        const billResponse = await axios.get<Bill[]>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/billings/`);
         const fetchedBills = billResponse.data;
         setBills(fetchedBills);
 
         const panchayatIds = [...new Set(fetchedBills.map(bill => bill.panchayat_id))];
         if (panchayatIds.length > 0) {
-          const panchayatRequests = panchayatIds.map(id => axios.get<{_id: string; panchayat_name: string}>(`${process.env.NEXT_BACKEND_URL}/api/panchayats/${id}`));
+          const panchayatRequests = panchayatIds.map(id => axios.get<{_id: string; panchayat_name: string}>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/panchayats/${id}`));
           const panchayatResponses = await Promise.all(panchayatRequests);
           const panchayatMap = panchayatResponses.reduce<Panchayats>((acc, { data }) => {
             acc[data._id] = data.panchayat_name;
@@ -236,7 +236,7 @@ const BillingManagementPage: React.FC = () => {
   const handleDelete = async () => {
     if (selectedBillId) {
       try {
-        await axios.delete(`${process.env.NEXT_BACKEND_URL}/api/billings/${selectedBillId}`);
+        await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/billings/${selectedBillId}`);
         setBills(bills.filter(bill => bill._id !== selectedBillId));
         setSuccess('Bill deleted successfully');
       } catch (error) {
@@ -251,7 +251,7 @@ const BillingManagementPage: React.FC = () => {
   const handleCreateBill = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      const response = await axios.post<Bill>(`${process.env.NEXT_BACKEND_URL}/api/billings/`, newBill);
+      const response = await axios.post<Bill>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/billings/`, newBill);
       setBills([...bills, response.data]);
       setSuccess('Bill created successfully');
       setNewBill({
@@ -285,7 +285,7 @@ const BillingManagementPage: React.FC = () => {
 
   const handlePayment = async (bill: Bill) => {
     try {
-      const paymentResponse = await axios.post<PaymentResponse>(`${process.env.NEXT_BACKEND_URL}/api/payments/`, { amount: bill.billing_amount * 100 });
+      const paymentResponse = await axios.post<PaymentResponse>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/payments/`, { amount: bill.billing_amount * 100 });
       const { orderId, razorpayKeyId } = paymentResponse.data;
 
       const options: any = {
@@ -297,7 +297,7 @@ const BillingManagementPage: React.FC = () => {
         order_id: orderId,
         handler: async (response: any) => {
           try {
-            const verificationResponse = await axios.post<VerificationResponse>(`${process.env.NEXT_BACKEND_URL}/api/verify`, {
+            const verificationResponse = await axios.post<VerificationResponse>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/verify`, {
               razorpay_order_id: response.razorpay_order_id,
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_signature: response.razorpay_signature,
