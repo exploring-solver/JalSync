@@ -23,7 +23,7 @@ const PanchayatManagementPage: React.FC = () => {
     const fetchPanchayats = async () => {
       try {
         // Fetch panchayats
-        const panchayatResponse = await axios.get(`${process.env.NEXT_BACKEND_URL}/api/panchayats/`);
+        const panchayatResponse = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/panchayats/`);
         setPanchayats(panchayatResponse.data);
       } catch (error) {
         console.error('Error fetching panchayats:', error);
@@ -36,7 +36,7 @@ const PanchayatManagementPage: React.FC = () => {
   const handleDelete = async () => {
     if (selectedPanchayatId) {
       try {
-        await axios.delete(`${process.env.NEXT_BACKEND_URL}/api/panchayats/${selectedPanchayatId}`);
+        await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/panchayats/${selectedPanchayatId}`);
         setPanchayats(panchayats.filter(panchayat => panchayat._id !== selectedPanchayatId));
         setSuccess('Panchayat deleted successfully');
       } catch (error) {
@@ -51,7 +51,7 @@ const PanchayatManagementPage: React.FC = () => {
   const handleCreatePanchayat = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
-      const response = await axios.post(`${process.env.NEXT_BACKEND_URL}/api/panchayats/`, newPanchayat);
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/panchayats/`, newPanchayat);
       setPanchayats([...panchayats, response.data]);
       setSuccess('Panchayat created successfully');
       setNewPanchayat({

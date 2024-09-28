@@ -14,7 +14,7 @@ const LoginPage = () => {
     event.preventDefault();
     setError(null); // Reset error state before a new login attempt
     try {
-      const response = await axios.post(`${process.env.NEXT_BACKEND_URL}/api/users/login`, { email, password });
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/login`, { email, password });
       
       // Store the access token in localStorage
       const accessToken = response.data.token; // Assuming the token is returned in response.data.token
