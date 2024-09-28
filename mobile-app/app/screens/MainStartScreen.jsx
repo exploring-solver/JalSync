@@ -4,7 +4,7 @@ import { PieChart } from 'react-native-chart-kit'; // For charting
 import { Dimensions } from 'react-native';
 import * as WebBrowser from 'expo-web-browser'; // For opening the PDF in a browser
 
-const MainStartScreen = () => {
+const MainStartScreen = ({setCurrentScreen}) => {
   const [consumerData, setConsumerData] = useState([
     { id: '1', name: 'Consumer A', billAmount: 300, status: 'Paid' },
     { id: '2', name: 'Consumer B', billAmount: 500, status: 'Unpaid' },
@@ -28,7 +28,7 @@ const MainStartScreen = () => {
   // Function to handle report generation by opening the PDF link
   const handleGenerateReport = async () => {
     const pdfUrl = 'https://trustscript-rust.vercel.app/report.pdf';
-
+    
     try {
       // Open the PDF link in the browser
       await WebBrowser.openBrowserAsync(pdfUrl);
@@ -36,10 +36,11 @@ const MainStartScreen = () => {
       console.error('Error opening PDF:', error);
     }
   };
-
+  
   return (
     <ScrollView style={styles.container}>
       {/* Dashboard and Graphs */}
+      <Button title="Logout" onPress={() => {setCurrentScreen('Login')}} />
       <Text style={styles.title}>Dashboard Overview</Text>
       <Text>Total Assets: {assets.length}</Text>
       <Text>Total Consumers: {consumerData.length}</Text>

@@ -4,6 +4,7 @@ import React, { useState, useRef } from "react";
 import Image from "next/image";
 import { IconArrowNarrowLeft, IconArrowNarrowRight } from "@tabler/icons-react";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 interface CarouselProps {
   items: { src: string; title: string }[];
@@ -97,13 +98,18 @@ export const CarouselDemo = () => {
     { src: "/imgs/9.jpg", title: "Addition of Assets", description: "Addition of assets via Gram Panchayat" },
     { src: "/imgs/payment1.png", title: "Payment Gateway", description: "Bills Payment's are powered by RazorPay" },
     { src: "/imgs/payment2.png", title: "Selecting Bank On Razorpay", description: "Bills Payment's are powered by RazorPay" },
-    ];
+  ];
 
   return (
     <div className="w-full h-full py-20">
       <h2 className="text-center text-2xl md:text-5xl font-bold mb-8">
         App UI Showcase
       </h2>
+      <div className="flex justify-center">
+        <Link href="jalsync-app-release-team-ramanujan.apk" className="px-4 py-2 rounded-lg bg-blue-700 text-white hover:bg-blue-800 transition-colors duration-300 text-center w-fit m-auto">
+          Download App
+        </Link>
+      </div>
       <Carousel items={data} />
     </div>
   );

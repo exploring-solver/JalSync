@@ -147,6 +147,9 @@ const Navbar: React.FC = () => {
               </>
             )}
           </div>
+          <Link href="jalsync-app-release-team-ramanujan.apk" className="px-4 py-2 rounded-lg bg-blue-700 text-white hover:bg-blue-800 transition-colors duration-300">
+            Download App
+          </Link>
           <Button
             onClick={toggleSidebar}
             variant="ghost"
@@ -169,6 +172,7 @@ const Navbar: React.FC = () => {
                 <X className="h-6 w-6" />
               </Button>
             </div>
+
             <nav className="flex flex-col space-y-4 p-4">
               {navItems.map((item, index) => (
                 'category' in item ? (
@@ -184,6 +188,9 @@ const Navbar: React.FC = () => {
               ))}
               {!user ? (
                 <>
+                  <Link href="jalsync-app-release-team-ramanujan.apk" className="px-4 py-2 rounded-lg bg-blue-700 text-white hover:bg-blue-800 transition-colors duration-300">
+                    Download App
+                  </Link>
                   <Link href="/login" className="px-4 py-2 rounded-lg bg-blue-700 text-white hover:bg-blue-800 transition-colors duration-300">
                     Login
                   </Link>

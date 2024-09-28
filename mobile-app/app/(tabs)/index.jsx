@@ -24,7 +24,7 @@ SplashScreen.preventAutoHideAsync();
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
-function MainTabNavigator() {
+function MainTabNavigator({setIsAuthenticated,navigation}) {
   const { t } = useTranslation();
 
   return (
@@ -56,7 +56,7 @@ function MainTabNavigator() {
       <Tab.Screen name="Inventory" component={ConsumablesScreen} options={{ title: t('common.inventory') }} />
       <Tab.Screen name="Finance" component={BillingsScreen} options={{ title: t('common.finance') }} />
       <Tab.Screen name="Panchayats" component={PanchayatsScreen} options={{ title: t('common.panchayats') }} />
-      <Tab.Screen name="Profile" component={ProfileScreen} options={{ title: t('common.profile') }} />
+      <Tab.Screen name="Profile" component={ProfileScreen}  navigation={navigation} setIsAuthenticated={setIsAuthenticated} options={{ title: t('common.profile') }} />
     </Tab.Navigator>
   );
 }
@@ -76,7 +76,7 @@ function AppNavigator() {
         </>
       ) : (
         <>
-          <Stack.Screen name="MainTab" component={MainTabNavigator} options={{ headerShown: false }} />
+          <Stack.Screen name="MainTab" component={MainTabNavigator} setIsAuthenticated={setIsAuthenticated} options={{ headerShown: false }} />
         </>
       )}
     </Stack.Navigator>

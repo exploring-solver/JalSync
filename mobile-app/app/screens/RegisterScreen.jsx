@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { TextInput, Button, Title, Snackbar } from 'react-native-paper';
+import { Picker } from '@react-native-picker/picker'; // Import Picker for dropdown
 import { register } from '../../services/api';
 
 const RegisterScreen = ({ navigation }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [role, setRole] = useState('user'); // State for role
   const [snackbarVisible, setSnackbarVisible] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
 
   const handleRegister = async () => {
     try {
-      await register({ name, email, password, role: 'user' });
+      await register({ name, email, password, role });
       setSnackbarMessage('Registration successful. Please login.');
       setSnackbarVisible(true);
       setTimeout(() => navigation.navigate('Login'), 3000);
@@ -47,6 +49,15 @@ const RegisterScreen = ({ navigation }) => {
         secureTextEntry
         style={styles.input}
       />
+      <Picker
+        selectedValue={role}
+        onValueChange={(itemValue) => setRole(itemValue)}
+        style={styles.picker}
+      >
+        <Picker.Item label="User" value="user" />
+        <Picker.Item label="Admin" value="admin" />
+        <Picker.Item label="Superuser" value="superuser" />
+      </Picker>
       <Button mode="contained" onPress={handleRegister} style={styles.button}>
         Register
       </Button>
@@ -75,6 +86,11 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   input: {
+    marginBottom: 10,
+  },
+  picker: {
+    height: 50,
+    width: '100%',
     marginBottom: 10,
   },
   button: {

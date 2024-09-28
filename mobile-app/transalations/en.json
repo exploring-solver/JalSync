@@ -2,6 +2,8 @@
   "language": "English",
   "common": {
     "changeLanguage": "Change Language",
+    "general":"General Screen",
+    "switchToLightMode":"Switch to light mode for a better experience.",
     "select": "Select",
     "login": "Login",
     "register": "Register",

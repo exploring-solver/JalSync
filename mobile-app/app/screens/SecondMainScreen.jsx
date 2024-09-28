@@ -2,9 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, TextInput, StyleSheet, FlatList } from 'react-native';
 import { LineChart, BarChart, PieChart } from 'react-native-chart-kit';
 import MapView, { Marker } from 'react-native-maps';
-import { Camera } from 'lucide-react';
 import { Alert } from 'react-native';
-import { Button } from 'react-native-paper';
+import { Button, Icon } from 'react-native-paper';
 import RazorpayCheckout from 'react-native-razorpay';
 import axios from 'axios';
 import * as Linking from 'expo-linking';
@@ -12,28 +11,37 @@ import * as WebBrowser from 'expo-web-browser';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
+import MainStartScreen from './MainStartScreen';
 
-// Mock data
 const assets = [
     { id: 1, name: 'Water Pump A', location: { latitude: 20.5937, longitude: 78.9629 }, status: 'Operational' },
     { id: 2, name: 'Pipeline B', location: { latitude: 20.6037, longitude: 78.9729 }, status: 'Needs Maintenance' },
     { id: 3, name: 'Treatment Plant C', location: { latitude: 20.5837, longitude: 78.9529 }, status: 'Under Repair' },
+    { id: 4, name: 'Reservoir D', location: { latitude: 20.5737, longitude: 78.9429 }, status: 'Operational' },
 ];
+
 const inventory = [
     { id: 1, name: 'Chlorine', quantity: 500, reorderLevel: 100 },
     { id: 2, name: 'Filters', quantity: 50, reorderLevel: 20 },
     { id: 3, name: 'Pipes', quantity: 200, reorderLevel: 50 },
+    { id: 4, name: 'Valves', quantity: 150, reorderLevel: 30 },
+    { id: 5, name: 'Gaskets', quantity: 300, reorderLevel: 60 },
 ];
+
 const financials = [
     { id: 1, type: 'Income', amount: 50000, date: '2024-09-01', description: 'Monthly water charges' },
     { id: 2, type: 'Expense', amount: 20000, date: '2024-09-05', description: 'Pump maintenance' },
     { id: 3, type: 'Income', amount: 30000, date: '2024-09-10', description: 'Government grant' },
+    { id: 4, type: 'Income', amount: 25000, date: '2024-09-15', description: 'Commercial water usage charges' },
+    { id: 5, type: 'Expense', amount: 12000, date: '2024-09-20', description: 'Pipeline repair' },
 ];
 
 const bills = [
     { id: 1, consumerId: 1, amount: 500, date: '2024-09-01', status: 'Unpaid' },
     { id: 2, consumerId: 2, amount: 750, date: '2024-09-01', status: 'Paid' },
     { id: 3, consumerId: 1, amount: 600, date: '2024-09-01', status: 'Unpaid' },
+    { id: 4, consumerId: 3, amount: 850, date: '2024-09-01', status: 'Paid' },
+    { id: 5, consumerId: 2, amount: 950, date: '2024-09-05', status: 'Unpaid' },
 ];
 
 const consumers = [
@@ -42,14 +50,12 @@ const consumers = [
     { id: 3, name: 'Bob Johnson', address: '789 Oak St', contact: '9876543212' },
 ];
 
-// Login Screen
-const LoginScreen = ({ setCurrentScreen,t, setUserRole }) => {
-    
+const LoginScreen = ({ setCurrentScreen, t, setUserRole }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleLogin = () => {
-        // Mock login logic
         if (username === 'gp' && password === 'password') {
             setUserRole('GP');
             setCurrentScreen('Dashboard');
@@ -60,38 +66,91 @@ const LoginScreen = ({ setCurrentScreen,t, setUserRole }) => {
             setUserRole('Consumer');
             setCurrentScreen('ConsumerDashboard');
         } else {
-            alert('loginScreen');
+            Alert.alert('Invalid credentials');
+        }
+    };
+
+    const fillCredentials = (role) => {
+        if (role === 'GP') {
+            setUsername('gp');
+            setPassword('password');
+        } else if (role === 'PHED') {
+            setUsername('phed');
+            setPassword('password');
+        } else if (role === 'Consumer') {
+            setUsername('consumer');
+            setPassword('password');
         }
     };
 
     return (
         <View style={styles.loginContainer}>
             <Text style={styles.title}>{t('loginScreen.title')}</Text>
+
             <TextInput
                 style={styles.input}
                 placeholder={t('loginScreen.email')}
                 value={username}
                 onChangeText={setUsername}
             />
-            <TextInput
-                style={styles.input}
-                placeholder={t('loginScreen.password')}
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry
-            />
+            <View style={styles.passwordContainer}>
+                <TextInput
+                    style={[styles.input, { flex: 1 }]}
+                    placeholder={t('loginScreen.password')}
+                    value={password}
+                    onChangeText={setPassword}
+                    secureTextEntry={!showPassword}
+                />
+                <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                    <Icon name={showPassword ? 'eye-off' : 'eye'} size={24} />
+                </TouchableOpacity>
+            </View>
+
             <TouchableOpacity style={styles.button} onPress={handleLogin}>
                 <Text style={styles.buttonText}>{t('common.login')}</Text>
             </TouchableOpacity>
+
+            {/* Quick fill buttons for different roles */}
+            <View style={styles.quickButtonsContainer}>
+                <TouchableOpacity style={styles.quickButton} onPress={() => fillCredentials('GP')}>
+                    <Text style={styles.quickButtonText}>Login as GP</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.quickButton} onPress={() => fillCredentials('Consumer')}>
+                    <Text style={styles.quickButtonText}>Login as Consumer</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.quickButton} onPress={() => fillCredentials('PHED')}>
+                    <Text style={styles.quickButtonText}>Login as PHED</Text>
+                </TouchableOpacity>
+            </View>
+
+
+            <View style={styles.noteContainer}>
+                <Icon name="information-outline" size={24} color="black" />
+                <Text style={styles.noteTitle}>Note:</Text>
+                <Text style={styles.noteText}>Login credentials for different roles:</Text>
+                <Text style={styles.credentialsText}>GP: gp / password</Text>
+                <Text style={styles.credentialsText}>PHED: phed / password</Text>
+                <Text style={styles.credentialsText}>Consumer: consumer / password</Text>
+            </View>
+
+            {/* Disclaimer Section */}
+            <View style={styles.disclaimerContainer}>
+                <Text style={styles.disclaimerText}>
+                    Disclaimer: This is a prototype app, and the backend might be slow. Therefore, the data is
+                    hardcoded for demonstration purposes. This application is intended to showcase the prototype
+                    only and should not be used for real-world purposes.
+                </Text>
+            </View>
         </View>
     );
 };
 
+
 // Dashboard Screen
 
-const DashboardScreen = ({ setCurrentScreen,t, userRole }) => {
-    
-    
+const DashboardScreen = ({ setCurrentScreen, t, userRole }) => {
+
+
     const chartConfig = {
         backgroundGradientFrom: '#ffffff',
         backgroundGradientTo: '#ffffff',
@@ -100,9 +159,10 @@ const DashboardScreen = ({ setCurrentScreen,t, userRole }) => {
 
     const data = {
         labels: [
-            t('dashboard.assetManagement'), 
-            t('dashboard.inventoryManagement'), 
-            t('dashboard.financialManagement'), 
+            t('dashboard.assetManagement'),
+            t('common.general'),
+            t('dashboard.inventoryManagement'),
+            t('dashboard.financialManagement'),
             t('dashboard.billingPayment')
         ],
         datasets: [
@@ -125,6 +185,9 @@ const DashboardScreen = ({ setCurrentScreen,t, userRole }) => {
             <TouchableOpacity style={styles.button} onPress={() => setCurrentScreen('AssetManagement')}>
                 <Text style={styles.buttonText}>{t('dashboard.assetManagement')}</Text>
             </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={() => setCurrentScreen('General')}>
+                <Text style={styles.buttonText}>{t('common.general')}</Text>
+            </TouchableOpacity>
             <TouchableOpacity style={styles.button} onPress={() => setCurrentScreen('InventoryManagement')}>
                 <Text style={styles.buttonText}>{t('dashboard.inventoryManagement')}</Text>
             </TouchableOpacity>
@@ -143,13 +206,13 @@ const DashboardScreen = ({ setCurrentScreen,t, userRole }) => {
 
 
 // Asset Management Screen
-const AssetManagementScreen = ({ t,setCurrentScreen }) => {
-    
+const AssetManagementScreen = ({ t, setCurrentScreen }) => {
+
 
     return (
         <ScrollView style={styles.scrollView}>
             <Text style={styles.title}>{t('assetManagement.title')}</Text>
-            <MapView
+            {/* <MapView
                 style={styles.map}
                 initialRegion={{
                     latitude: 20.5937,
@@ -166,7 +229,7 @@ const AssetManagementScreen = ({ t,setCurrentScreen }) => {
                         description={asset.status}
                     />
                 ))}
-            </MapView>
+            </MapView> */}
             {assets.map((asset) => (
                 <View key={asset.id} style={styles.listItem}>
                     <Text>{t('common.name')}: {asset.name}</Text>
@@ -184,8 +247,8 @@ const AssetManagementScreen = ({ t,setCurrentScreen }) => {
 };
 
 // Inventory Management Screen
-const InventoryManagementScreen = ({t, setCurrentScreen }) => {
-    
+const InventoryManagementScreen = ({ t, setCurrentScreen }) => {
+
 
     const chartConfig = {
         backgroundGradientFrom: '#ffffff',
@@ -280,7 +343,7 @@ const FinancialManagementScreen = ({ setCurrentScreen }) => {
     );
 };
 
-const BillingPaymentScreen = ({ setCurrentScreen,t, userRole }) => {
+const BillingPaymentScreen = ({ setCurrentScreen, t, userRole }) => {
     const [bills, setBills] = useState([]);
     const [selectedBill, setSelectedBill] = useState(null);
     const url = "http://your-api-url.com"; // Update with your actual API URL
@@ -408,7 +471,7 @@ const BillingPaymentScreen = ({ setCurrentScreen,t, userRole }) => {
     );
 };
 
-const OrderSuccessScreen = ({ setCurrentScreen,t, billDetails }) => {
+const OrderSuccessScreen = ({ setCurrentScreen, t, billDetails }) => {
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 }}>
@@ -514,7 +577,7 @@ const ConsumerDashboardScreen = ({ setCurrentScreen }) => {
                     <Text>Date: {bill.date}</Text>
                     <Text>Status: {bill.status}</Text>
                     {bill.status === 'Unpaid' && (
-                        <TouchableOpacity 
+                        <TouchableOpacity
                             style={[styles.smallButton, isLoading && styles.disabledButton]}
                             onPress={() => handlePayment(bill)}
                             disabled={isLoading}
@@ -533,77 +596,136 @@ const ConsumerDashboardScreen = ({ setCurrentScreen }) => {
 
 const styles = StyleSheet.create({
     container: {
-      flex: 1,
-      backgroundColor: '#f0f0f0',
+        flex: 1,
+        backgroundColor: '#f0f0f0',
     },
     scrollView: {
-      padding: 20,
-      paddingBottom: 40, // Add extra padding at the bottom for consistent spacing
+        padding: 20,
+        paddingBottom: 40,
     },
     loginContainer: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      padding: 20,
-      marginBottom: 20, // Add margin-bottom to login container
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 20,
+        marginBottom: 20,
+        backgroundColor: 'white',
+        borderRadius: 10,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
     },
     title: {
-      fontSize: 24,
-      fontWeight: 'bold',
-      marginBottom: 20,
-      textAlign: 'center',
-    },
-    subtitle: {
-      fontSize: 18,
-      fontWeight: 'bold',
-      marginTop: 10,
-      marginBottom: 20, // Increase margin-bottom
+        fontSize: 28,
+        fontWeight: 'bold',
+        marginBottom: 30,
+        textAlign: 'center',
+        color: '#007AFF',
     },
     input: {
-      width: '100%',
-      height: 40,
-      borderColor: 'gray',
-      borderWidth: 1,
-      borderRadius: 5,
-      marginBottom: 20, // Increase margin-bottom
-      paddingHorizontal: 10,
+        width: '100%',
+        height: 50,
+        borderColor: '#ddd',
+        borderWidth: 1,
+        borderRadius: 8,
+        marginBottom: 20,
+        paddingHorizontal: 15,
+        fontSize: 16,
+        backgroundColor: '#f9f9f9',
+    },
+    passwordContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 20,
+        width: '100%',
     },
     button: {
-      backgroundColor: '#007AFF',
-      padding: 10,
-      borderRadius: 5,
-      marginBottom: 20, // Increase margin-bottom
-      width: '100%',
-      alignItems: 'center',
+        backgroundColor: '#007AFF',
+        padding: 15,
+        borderRadius: 8,
+        marginBottom: 20,
+        width: '100%',
+        alignItems: 'center',
+    },
+    quickButtonsContainer: {
+        flexDirection: 'row', // Align buttons horizontally
+        justifyContent: 'space-between', // Distribute space between buttons
+        marginVertical: 10, // Add some margin between buttons and surrounding elements
+    },
+    quickButton: {
+        flex: 1, // Make buttons equal width
+        paddingVertical: 5, // Reduce padding to make the button smaller
+        paddingHorizontal: 8, // Small padding on the sides
+        backgroundColor: '#34A853', // Button background color
+        borderRadius: 5, // Rounded corners
+        marginHorizontal: 3, // Small gap between buttons
+        alignItems: 'center', // Center the text
+    },
+    quickButtonText: {
+        color: 'white',
+        fontSize: 12, // Smaller text size
+        fontWeight: 'bold', // Keep the text bold for readability
     },
     smallButton: {
-      backgroundColor: '#007AFF',
-      padding: 5,
-      borderRadius: 5,
-      marginTop: 5,
-      marginBottom: 20, // Add margin-bottom
-      alignItems: 'center',
+        backgroundColor: '#007AFF',
+        padding: 10,
+        borderRadius: 5,
+        marginTop: 10,
+        marginBottom: 20,
+        alignItems: 'center',
     },
     buttonText: {
-      color: 'white',
-      fontWeight: 'bold',
+        color: 'white',
+        fontWeight: 'bold',
+        fontSize: 18,
+    },
+    noteContainer: {
+        backgroundColor: '#f0f8ff',
+        padding: 15,
+        borderRadius: 8,
+        marginBottom: 30,
+        width: '100%',
+    },
+    noteTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 10,
+        color: '#007AFF',
+    },
+    noteText: {
+        fontSize: 14,
+        marginBottom: 5,
+        color: '#333',
+    },
+    credentialsText: {
+        fontSize: 14,
+        marginBottom: 5,
+        fontWeight: 'bold',
+        color: '#555',
     },
     listItem: {
-      backgroundColor: 'white',
-      padding: 10,
-      borderRadius: 5,
-      marginBottom: 20, // Increase margin-bottom
+        backgroundColor: 'white',
+        padding: 15,
+        borderRadius: 8,
+        marginBottom: 20,
     },
     map: {
-      height: 300,
-      marginBottom: 20,
+        height: 300,
+        marginBottom: 20,
+        borderRadius: 8,
+        overflow: 'hidden',
     },
     chart: {
-      marginVertical: 8,
-      borderRadius: 16,
-      marginBottom: 20, // Add margin-bottom
+        marginVertical: 8,
+        borderRadius: 16,
+        marginBottom: 20,
     },
-  });
+});
 
 // Add a component for reporting water supply issues (for consumers)
 const ReportIssueScreen = ({ setCurrentScreen }) => {
@@ -692,12 +814,14 @@ const ScheduleMaintenanceScreen = ({ setCurrentScreen }) => {
 const SecondMainScreen = () => {
     const [currentScreen, setCurrentScreen] = useState('Login');
     const [userRole, setUserRole] = useState(null);
-    const {t} = useTranslation();
+    const { t } = useTranslation();
 
     const renderScreen = () => {
         switch (currentScreen) {
             case 'Login':
                 return <LoginScreen t={t} setCurrentScreen={setCurrentScreen} setUserRole={setUserRole} />;
+            case 'General':
+                return <MainStartScreen t={t} setCurrentScreen={setCurrentScreen} setUserRole={setUserRole} />;
             case 'Dashboard':
                 return <DashboardScreen t={t} setCurrentScreen={setCurrentScreen} userRole={userRole} />;
             case 'AssetManagement':

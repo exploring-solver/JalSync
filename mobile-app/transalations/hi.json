@@ -1,6 +1,8 @@
 {
   "language": "हिंदी",
   "common": {
+    "switchToLightMode":"Switch to light mode for a better experience.",
+    "general": "सामान्य स्क्रीन",
     "changeLanguage": "भाषा बदलें",
     "select": "चुनें",
     "login": "लॉग इन करें",
