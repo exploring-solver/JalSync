@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useEffect, useRef, useState } from 'react';
 import { Box, Button, TextField, Select, MenuItem, Typography, Divider } from '@mui/material';
 import { OlaMaps } from '@/olaSDK/olamaps-js-sdk.es';
@@ -31,6 +31,46 @@ const GISAssetManagement: React.FC = () => {
     capacity: '',
     condition: '',
   });
+
+  // Load dummy data on component mount
+  useEffect(() => {
+    const dummyAssets: Asset[] = [
+      {
+        id: '1',
+        type: 'Pump',
+        latitude: 28.690229,
+        longitude: 77.2881183,
+        installationDate: '2022-06-01',
+        manufacturer: 'Company A',
+        model: 'X123',
+        capacity: '100L',
+        condition: 'Excellent',
+      },
+      {
+        id: '2',
+        type: 'Pipeline',
+        latitude: 28.691229,
+        longitude: 77.2891183,
+        installationDate: '2021-03-15',
+        manufacturer: 'Company B',
+        model: 'P456',
+        capacity: '200L',
+        condition: 'Good',
+      },
+      {
+        id: '3',
+        type: 'Valve',
+        latitude: 28.692229,
+        longitude: 77.2871183,
+        installationDate: '2020-12-20',
+        manufacturer: 'Company C',
+        model: 'V789',
+        capacity: '50L',
+        condition: 'Fair',
+      },
+    ];
+    setAssets(dummyAssets);
+  }, []);
 
   useEffect(() => {
     if (!olaMapsRef.current && mapContainerRef.current) {
@@ -109,7 +149,6 @@ const GISAssetManagement: React.FC = () => {
                 margin="dense"
                 sx={{ color: '#333' }}
                 placeholder='Asset Type'
-
               >
                 <MenuItem value="Pump" sx={{ color: '#333' }}>Pump</MenuItem>
                 <MenuItem value="Pipeline" sx={{ color: '#333' }}>Pipeline</MenuItem>
@@ -193,7 +232,7 @@ const GISAssetManagement: React.FC = () => {
         {assets.length > 0 && (
           <Box sx={{ mt: 4 }}>
             <Divider sx={{ mb: 2 }} />
-            <Typography variant="h5" sx={{ mb: 2, color: '#333' }}>Asset List</Typography>
+            <Typography variant="h5" sx={{ mb: 2, color: '#333' }} className='font-semibold text-center'>Asset List</Typography>
             <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 2 }}>
               {assets.map((asset) => (
                 <Box
@@ -210,11 +249,11 @@ const GISAssetManagement: React.FC = () => {
                   }}
                   onClick={() => handleUpdateAsset(asset)}
                 >
-                  <Typography variant="h6" sx={{ color: '#333' }}>{asset.type}</Typography>
-                  <Typography variant="body2" sx={{ color: '#555' }}>ID: {asset.id}</Typography>
-                  <Typography variant="body2" sx={{ color: '#555' }}>Latitude: {asset.latitude}</Typography>
-                  <Typography variant="body2" sx={{ color: '#555' }}>Longitude: {asset.longitude}</Typography>
-                  <Typography variant="body2" sx={{ color: '#555' }}>Condition: {asset.condition}</Typography>
+                  <Typography variant="h6" sx={{ color: '#333' }} className='font-semibold text-center text-2xl'>{asset.type}</Typography>
+                  <Typography variant="body2" sx={{ color: '#555' }}className='font-semibold text-left text-xl'>ID: {asset.id}</Typography>
+                  <Typography variant="body2" sx={{ color: '#555' }}className='font-semibold text-left text-xl'>Latitude: {asset.latitude}</Typography>
+                  <Typography variant="body2" sx={{ color: '#555' }} className='font-semibold text-left text-xl'>Longitude: {asset.longitude}</Typography>
+                  <Typography variant="body2" sx={{ color: '#555' }}className='font-semibold text-left text-xl'>Condition: {asset.condition}</Typography>
                 </Box>
               ))}
             </Box>

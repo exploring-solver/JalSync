@@ -56,6 +56,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
   }, []);
 
+  const handleReload = () => {
+    window.location.reload();
+  };
+
   const login = async (email: string, password: string) => {
     setLoading(true); // Set loading to true when trying to log in
     try {
@@ -65,6 +69,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         localStorage.setItem("accessToken", accessToken);
         setUser(response.data?.name ?? null); // Set user after successful login
         router.push("/"); // Redirect to homepage
+        setTimeout(() => {handleReload();},1000);
       } else {
         throw new Error("No access token received");
       }

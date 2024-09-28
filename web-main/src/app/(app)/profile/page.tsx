@@ -1,9 +1,11 @@
 "use client";
-
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation'; // Ensure proper import for useRouter in app directory
+import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { User, Mail, Phone, MapPin, LogOut } from 'lucide-react';
 
 interface UserProfile {
   name: string;
@@ -16,14 +18,14 @@ const Profile: React.FC = () => {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter(); // Import the router from next/navigation
+  const router = useRouter();
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const token = localStorage.getItem('accessToken'); // Assuming token is stored in localStorage
+        const token = localStorage.getItem('accessToken');
         if (!token) {
-          router.push('/login'); // Redirect to login if not authenticated
+          router.push('/login');
           return;
         }
 
@@ -40,7 +42,6 @@ const Profile: React.FC = () => {
       }
     };
 
-    // Ensure that this runs only on the client side
     if (typeof window !== 'undefined') {
       fetchProfile();
     }
@@ -48,40 +49,81 @@ const Profile: React.FC = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('user');
-    localStorage.removeItem('accessToken'); // Also remove token
+    localStorage.removeItem('accessToken');
     router.push('/login');
   };
 
   if (loading) {
-    return <p>Loading...</p>;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-indigo-500"></div>
+      </div>
+    );
   }
 
   if (error) {
-    return <p>{error}</p>;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <Alert variant="destructive">
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      </div>
+    );
   }
 
   return (
-    <div className="container mx-auto p-6 py-16 min-h-screen my-8" >
-      <h1 className="text-2xl font-bold mb-4">Profile</h1>
-      {profile && (
-        <div className="bg-white p-6 shadow-lg rounded-lg">
-          <p className="mb-2">
-            <strong>Name:</strong> {profile.name}
-          </p>
-          <p className="mb-2">
-            <strong>Email:</strong> {profile.email}
-          </p>
-          <p className="mb-2">
-            <strong>Phone Number:</strong> {profile.phoneNumber}
-          </p>
-          <p className="mb-4">
-            <strong>Address:</strong> {profile.address}
-          </p>
-          <Button onClick={handleLogout} className="bg-red-500 text-white px-4 py-2 rounded">
-            Logout
-          </Button>
-        </div>
-      )}
+    <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <div className="sm:mx-auto sm:w-full sm:max-w-md">
+        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Your Profile</h2>
+      </div>
+
+      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-2xl font-bold text-center">Personal Information</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {profile && (
+              <div className="space-y-4">
+                <div className="flex items-center space-x-4">
+                  <User className="h-5 w-5 text-gray-400" />
+                  <div>
+                    <p className="text-sm font-medium text-gray-500">Name</p>
+                    <p className="mt-1 text-sm text-gray-900">{profile.name}</p>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-4">
+                  <Mail className="h-5 w-5 text-gray-400" />
+                  <div>
+                    <p className="text-sm font-medium text-gray-500">Email</p>
+                    <p className="mt-1 text-sm text-gray-900">{profile.email}</p>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-4">
+                  <Phone className="h-5 w-5 text-gray-400" />
+                  <div>
+                    <p className="text-sm font-medium text-gray-500">Phone Number</p>
+                    <p className="mt-1 text-sm text-gray-900">{profile.phoneNumber}</p>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-4">
+                  <MapPin className="h-5 w-5 text-gray-400" />
+                  <div>
+                    <p className="text-sm font-medium text-gray-500">Address</p>
+                    <p className="mt-1 text-sm text-gray-900">{profile.address}</p>
+                  </div>
+                </div>
+              </div>
+            )}
+            <div className="mt-6">
+              <Button onClick={handleLogout} className="w-full flex justify-center items-center space-x-2">
+                <LogOut className="h-5 w-5" />
+                <span>Logout</span>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };

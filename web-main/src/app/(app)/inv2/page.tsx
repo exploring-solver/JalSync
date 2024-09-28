@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   LineChart,
   Line,
@@ -54,6 +54,49 @@ const InventoryManagement: React.FC = () => {
   const [selectedItem, setSelectedItem] = useState<InventoryItem | null>(null);
   const [forecastData, setForecastData] = useState<ForecastData[]>([]);
 
+  // Add some dummy data for the inventory when the component mounts
+  useEffect(() => {
+    const dummyInventory: InventoryItem[] = [
+      {
+        id: '1',
+        name: 'Chlorine',
+        category: 'Chemical',
+        quantity: 100,
+        supplier: 'Supplier A',
+        purchaseDate: '2023-09-01',
+        expirationDate: '2024-09-01',
+        usageRate: 10,
+        reorderPoint: 20,
+        optimalStockLevel: 150,
+      },
+      {
+        id: '2',
+        name: 'Water Filter',
+        category: 'Filter',
+        quantity: 50,
+        supplier: 'Supplier B',
+        purchaseDate: '2023-08-15',
+        expirationDate: '2025-08-15',
+        usageRate: 5,
+        reorderPoint: 10,
+        optimalStockLevel: 60,
+      },
+      {
+        id: '3',
+        name: 'Valve Spare',
+        category: 'Spare Part',
+        quantity: 30,
+        supplier: 'Supplier C',
+        purchaseDate: '2023-07-10',
+        expirationDate: '2026-07-10',
+        usageRate: 2,
+        reorderPoint: 5,
+        optimalStockLevel: 40,
+      },
+    ];
+    setInventory(dummyInventory);
+  }, []);
+
   const handleAddItem = (newItem: InventoryItem) => {
     setInventory([...inventory, newItem]);
   };
@@ -62,22 +105,22 @@ const InventoryManagement: React.FC = () => {
     setInventory(inventory.map((item) => (item.id === updatedItem.id ? updatedItem : item)));
   };
 
+  // Add dummy data for the forecast
   const generateForecast = () => {
-    // This is a placeholder for the actual forecasting logic
     const mockForecast: ForecastData[] = [
-      { month: 'Jan', demand: 100 },
-      { month: 'Feb', demand: 120 },
-      { month: 'Mar', demand: 140 },
-      { month: 'Apr', demand: 160 },
-      { month: 'May', demand: 180 },
-      { month: 'Jun', demand: 200 },
+      { month: 'Jan', demand: 80 },
+      { month: 'Feb', demand: 100 },
+      { month: 'Mar', demand: 120 },
+      { month: 'Apr', demand: 110 },
+      { month: 'May', demand: 130 },
+      { month: 'Jun', demand: 140 },
     ];
     setForecastData(mockForecast);
   };
 
   return (
     <Container maxWidth="lg" sx={{ py: 8, mt: 8 }}>
-      <Typography variant="h4" component="h1" gutterBottom sx={{fontWeight: 'bold'}}>
+      <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 'bold' }}>
         Inventory Management and Demand Forecasting
       </Typography>
 
@@ -85,7 +128,7 @@ const InventoryManagement: React.FC = () => {
         <Grid item xs={12} md={6}>
           <Card>
             <CardContent>
-              <Typography variant="h5" gutterBottom sx={{fontWeight: 'bold'}}>
+              <Typography variant="h5" gutterBottom sx={{ fontWeight: 'bold' }}>
                 Inventory List
               </Typography>
               <TableContainer component={Paper}>
@@ -127,7 +170,7 @@ const InventoryManagement: React.FC = () => {
         <Grid item xs={12} md={6}>
           <Card>
             <CardContent>
-              <Typography variant="h5" gutterBottom sx={{fontWeight: 'bold'}}>
+              <Typography variant="h5" gutterBottom sx={{ fontWeight: 'bold' }}>
                 Item Details
               </Typography>
               <Box

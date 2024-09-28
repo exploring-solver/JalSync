@@ -83,9 +83,7 @@ const Navbar: React.FC = () => {
       {item.name}
     </Link>
   );
-  const handleReload = () => {
-    window.location.reload();
-  };
+ 
 
   const NavDropdown: React.FC<{ category: string; items: NavItem[] }> = ({ category, items }) => (
     <DropdownMenu>
@@ -140,9 +138,7 @@ const Navbar: React.FC = () => {
                 <Link href="/login" className="px-4 py-2 rounded-lg bg-blue-700 text-white hover:bg-blue-800 transition-colors duration-300">
                   Login
                 </Link>
-                <Button className="px-4 py-2 rounded-lg bg-blue-700 text-white hover:bg-blue-800 transition-colors duration-300" onClick={handleReload}>
-                  Reload
-                </Button>
+                
                 <Link href="/register" className="px-4 py-2 rounded-lg bg-blue-700 text-white hover:bg-blue-800 transition-colors duration-300">
                   Register
                 </Link>
@@ -196,7 +192,7 @@ const Navbar: React.FC = () => {
                   <Link href="/profile" className="px-4 py-2 rounded-lg bg-green-700 text-white hover:bg-green-800 transition-colors duration-300">
                     {user}
                   </Link>
-                  <Button onClick={logout} className="px-4 py-2 rounded-lg bg-red-700 text-white hover:bg-red-800">
+                  <Button onClick={logout} className="px-4 py-2 rounded-lg bg-red-700 text-white hover:bg-red-800 transition-colors duration-300">
                     Logout
                   </Button>
                 </>
