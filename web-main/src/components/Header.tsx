@@ -164,7 +164,7 @@ const Navbar: React.FC = () => {
               </>
             )}
           </div>
-          <Link href="jalsync-app-release-team-ramanujan.apk" className="px-4 py-2 rounded-lg bg-blue-700 text-white hover:bg-blue-800 transition-colors duration-300">
+          <Link href="https://github.com/exploring-solver/JalSync/raw/refs/heads/main/web-main/public/jalsync-app-release-team-ramanujan.apk" className="px-4 py-2 rounded-lg bg-blue-700 text-white hover:bg-blue-800 transition-colors duration-300">
             Download App
           </Link>
           <Button
@@ -205,7 +205,7 @@ const Navbar: React.FC = () => {
               ))}
               {!user ? (
                 <>
-                  <Link href="jalsync-app-release-team-ramanujan.apk" className="px-4 py-2 rounded-lg bg-blue-700 text-white hover:bg-blue-800 transition-colors duration-300">
+                  <Link href="https://github.com/exploring-solver/JalSync/raw/refs/heads/main/web-main/public/jalsync-app-release-team-ramanujan.apk" className="px-4 py-2 rounded-lg bg-blue-700 text-white hover:bg-blue-800 transition-colors duration-300">
                     Download App
                   </Link>
                   <Link href="/login" className="px-4 py-2 rounded-lg bg-blue-700 text-white hover:bg-blue-800 transition-colors duration-300">

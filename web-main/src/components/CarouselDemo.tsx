@@ -108,7 +108,7 @@ export const CarouselDemo = () => {
         App UI Showcase
       </h2>
       <div className="flex justify-center">
-        <Link href="jalsync-app-release-team-ramanujan.apk" className="px-4 py-2 rounded-lg bg-blue-700 text-white hover:bg-blue-800 transition-colors duration-300 text-center w-fit m-auto">
+        <Link href="https://github.com/exploring-solver/JalSync/raw/refs/heads/main/web-main/public/jalsync-app-release-team-ramanujan.apk" className="px-4 py-2 rounded-lg bg-blue-700 text-white hover:bg-blue-800 transition-colors duration-300 text-center w-fit m-auto">
           Download App
         </Link>
       </div>
