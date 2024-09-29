@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import React, { useState } from "react";
-// import axios from "axios";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import {
   Box,
   Button,
@@ -24,7 +24,7 @@ import {
   FormControl,
 } from "@mui/material";
 import { ExpandMore, ExpandLess, Delete } from "@mui/icons-material";
-// import { fetchPanchayats } from "@/services/api";
+import { fetchPanchayats } from "@/services/api";
 
 interface Asset {
   _id: string;
@@ -44,24 +44,7 @@ interface NewAsset {
 }
 
 const AssetManagementPage: React.FC = () => {
-  const [assets, setAssets] = useState<Asset[]>([
-    {
-      _id: "1",
-      asset_type: "Solar Panel",
-      location_latitude: "12.9716",
-      location_longitude: "77.5946",
-      installation_date: "2023-01-15",
-      panchayat_id: "1",
-    },
-    {
-      _id: "2",
-      asset_type: "Water Pump",
-      location_latitude: "13.0827",
-      location_longitude: "80.2707",
-      installation_date: "2022-12-20",
-      panchayat_id: "2",
-    },
-  ]);
+  const [assets, setAssets] = useState<Asset[]>([]);
   const [collapsedAssetType, setCollapsedAssetType] = useState<string | null>(null);
   const [selectedAssetId, setSelectedAssetId] = useState<string | null>(null);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
@@ -74,42 +57,39 @@ const AssetManagementPage: React.FC = () => {
   });
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const [panchayats, setPanchayats] = useState<{ _id: string; panchayat_name: string }[]>([
-    { _id: "1", panchayat_name: "Panchayat 1" },
-    { _id: "2", panchayat_name: "Panchayat 2" },
-  ]);
+  const [panchayats, setPanchayats] = useState<{ _id: string; panchayat_name: string }[]>([]);
 
-  // Commented out API call
-  // useEffect(() => {
-  //   const getPanchayats = async () => {
-  //     try {
-  //       const data = await fetchPanchayats();
-  //       setPanchayats(data);
-  //     } catch (error) {
-  //       console.error("Error fetching panchayats:", error);
-  //     }
-  //   };
+  useEffect(() => {
+    const getPanchayats = async () => {
+      try {
+        const data = await fetchPanchayats();
+        setPanchayats(data);
+      } catch (error) {
+        console.error("Error fetching panchayats:", error);
+      }
+    };
 
-  //   getPanchayats();
-  // }, []);
+    getPanchayats();
+  }, []);
 
-  // useEffect(() => {
-  //   const fetchAssets = async () => {
-  //     try {
-  //       const assetResponse = await axios.get<Asset[]>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/assets/`);
-  //       const fetchedAssets = assetResponse.data;
-  //       setAssets(fetchedAssets);
-  //     } catch (error) {
-  //       console.error("Error fetching assets:", error);
-  //     }
-  //   };
+  useEffect(() => {
+    const fetchAssets = async () => {
+      try {
+        const assetResponse = await axios.get<Asset[]>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/assets`);
+        const fetchedAssets = assetResponse.data;
+        setAssets(fetchedAssets);
+      } catch (error) {
+        console.error("Error fetching assets:", error);
+      }
+    };
 
-  //   fetchAssets();
-  // }, []);
+    fetchAssets();
+  }, []);
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (selectedAssetId) {
       try {
+        await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/assets/${selectedAssetId}`);
         setAssets(assets.filter((asset) => asset._id !== selectedAssetId));
         setSuccess("Asset deleted successfully");
       } catch (error) {
@@ -121,14 +101,11 @@ const AssetManagementPage: React.FC = () => {
     }
   };
 
-  const handleCreateAsset = (event: React.FormEvent) => {
+  const handleCreateAsset = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
-      const newAssetData: Asset = {
-        _id: (assets.length + 1).toString(), // simple ID generation
-        ...newAsset,
-      };
-      setAssets([...assets, newAssetData]);
+      const response = await axios.post<Asset>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/assets`, newAsset);
+      setAssets([...assets, response.data]);
       setSuccess("Asset created successfully");
       setNewAsset({
         asset_type: "",
